@@ -27,8 +27,6 @@ class DataConfig:
     mixup_alpha: float = 0.4
     pin_memory: bool = True
     persistent_workers: bool = True
-    smoke_test: bool = False
-    samples_per_class: int = 8
 
 
 class MixUpCollator:
@@ -126,24 +124,6 @@ def _build_subset(root: str | Path, transform: transforms.Compose, indices: list
     return Subset(dataset, indices)
 
 
-def _sample_smoke_indices(base_dataset: datasets.ImageFolder, samples_per_class: int, seed: int) -> list[int]:
-    if samples_per_class <= 0:
-        raise ValueError(f"samples_per_class must be > 0, got {samples_per_class}")
-
-    generator = torch.Generator().manual_seed(seed)
-    class_to_indices: dict[int, list[int]] = {}
-    for idx, class_idx in enumerate(base_dataset.targets):
-        class_to_indices.setdefault(class_idx, []).append(idx)
-
-    sampled_indices: list[int] = []
-    for class_idx in sorted(class_to_indices):
-        indices = class_to_indices[class_idx]
-        perm = torch.randperm(len(indices), generator=generator).tolist()
-        take = min(samples_per_class, len(indices))
-        sampled_indices.extend(indices[i] for i in perm[:take])
-    return sampled_indices
-
-
 def create_dataloaders(
     config: DataConfig,
     split_manifest_path: str | Path | None = None,
@@ -154,8 +134,6 @@ def create_dataloaders(
 
     base_dataset = datasets.ImageFolder(root=data_dir)
     available_indices = list(range(len(base_dataset)))
-    if config.smoke_test:
-        available_indices = _sample_smoke_indices(base_dataset, config.samples_per_class, config.seed)
 
     split_positions = _split_indices(len(available_indices), config.train_ratio, config.val_ratio, config.seed)
     split_indices = {
@@ -228,8 +206,6 @@ def create_dataloaders(
         "dataset_size": len(available_indices),
         "full_dataset_size": len(base_dataset),
         "split_sizes": {name: len(indices) for name, indices in split_indices.items()},
-        "smoke_test": config.smoke_test,
-        "samples_per_class": config.samples_per_class if config.smoke_test else None,
         "pin_memory": pin_memory,
     }
 

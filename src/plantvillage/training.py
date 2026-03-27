@@ -23,7 +23,6 @@ class TrainingConfig:
     log_interval: int = 20
     max_train_steps: int | None = None
     max_val_steps: int | None = None
-    max_test_steps: int | None = None
 
 
 def soft_target_cross_entropy(logits: torch.Tensor, targets: torch.Tensor) -> torch.Tensor:
@@ -279,7 +278,6 @@ def evaluate_model(
     model: nn.Module,
     dataloader: torch.utils.data.DataLoader,
     device: str | torch.device,
-    max_steps: int | None = None,
 ) -> dict[str, float]:
     model.eval()
     model = model.to(device)
@@ -290,7 +288,6 @@ def evaluate_model(
         optimizer=None,
         logger=logging.getLogger("plantvillage"),
         log_interval=10**9,
-        max_steps=max_steps,
     )
     return {
         "test_loss": metrics["loss"],

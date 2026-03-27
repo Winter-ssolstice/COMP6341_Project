@@ -41,7 +41,6 @@ def main() -> None:
                 "model_name": run_config.get("model_name"),
                 "strategy": run_config.get("strategy"),
                 "pretrained": run_config.get("pretrained"),
-                "smoke_test": run_config.get("smoke_test"),
                 "val_loss": last_epoch.get("val_loss"),
                 "val_top1_accuracy": last_epoch.get("val_accuracy"),
                 "val_macro_f1": last_epoch.get("val_macro_f1"),

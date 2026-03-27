@@ -28,8 +28,6 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--weight-decay", type=float, default=1e-4)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--mixup-alpha", type=float, default=0.4)
-    parser.add_argument("--smoke-test", action="store_true", help="Run a lightweight end-to-end smoke test.")
-    parser.add_argument("--samples-per-class", type=int, default=8, help="Number of images per class in smoke test mode.")
     parser.add_argument("--max-train-steps", type=int, default=None, help="Optional cap on train batches per epoch.")
     parser.add_argument("--max-val-steps", type=int, default=None, help="Optional cap on validation batches per epoch.")
     parser.add_argument(
@@ -39,13 +37,6 @@ def parse_args() -> argparse.Namespace:
         help="Backbone for the baseline runner.",
     )
     return parser.parse_args()
-
-
-def resolve_output_dir(args: argparse.Namespace) -> Path:
-    output_dir = Path(args.output_dir)
-    if args.smoke_test and str(output_dir) == "outputs/part1/baseline_resnet18":
-        return Path("outputs/part1/smoke_test")
-    return output_dir
 
 
 def build_model(model_name: str, num_classes: int) -> torch.nn.Module:
@@ -68,27 +59,15 @@ def build_model(model_name: str, num_classes: int) -> torch.nn.Module:
 def main() -> None:
     args = parse_args()
     torch.manual_seed(args.seed)
-    output_dir = resolve_output_dir(args)
-
-    epochs = args.epochs
-    batch_size = args.batch_size
-    max_train_steps = args.max_train_steps
-    max_val_steps = args.max_val_steps
-    if args.smoke_test:
-        epochs = 1 if args.epochs == 10 else args.epochs
-        batch_size = 8 if args.batch_size == 32 else args.batch_size
-        max_train_steps = 5 if args.max_train_steps is None else args.max_train_steps
-        max_val_steps = 2 if args.max_val_steps is None else args.max_val_steps
+    output_dir = Path(args.output_dir)
 
     data_config = DataConfig(
         data_dir=args.data_dir,
         image_size=args.image_size,
-        batch_size=batch_size,
+        batch_size=args.batch_size,
         num_workers=args.num_workers,
         seed=args.seed,
         mixup_alpha=args.mixup_alpha,
-        smoke_test=args.smoke_test,
-        samples_per_class=args.samples_per_class,
     )
     split_manifest_path = output_dir / "split_manifest.json"
     loaders = create_dataloaders(data_config, split_manifest_path=split_manifest_path)
@@ -97,12 +76,11 @@ def main() -> None:
     model = build_model(args.model, metadata["num_classes"])
     training_config = TrainingConfig(
         output_dir=str(output_dir),
-        epochs=epochs,
+        epochs=args.epochs,
         learning_rate=args.lr,
         weight_decay=args.weight_decay,
-        max_train_steps=max_train_steps,
-        max_val_steps=max_val_steps,
-        max_test_steps=max_val_steps if args.smoke_test else None,
+        max_train_steps=args.max_train_steps,
+        max_val_steps=args.max_val_steps,
     )
 
     history = train_model(
@@ -115,7 +93,6 @@ def main() -> None:
                 **asdict(data_config),
                 **metadata,
             },
-            "smoke_test": args.smoke_test,
             "model_name": args.model,
         },
     )
@@ -123,7 +100,6 @@ def main() -> None:
         model,
         loaders["test_loader"],
         training_config.device,
-        max_steps=training_config.max_test_steps,
     )
     Path(output_dir, "test_metrics.json").write_text(json.dumps(test_metrics, indent=2), encoding="utf-8")
 

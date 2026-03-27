@@ -34,8 +34,6 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--weight-decay", type=float, default=1e-4)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--mixup-alpha", type=float, default=0.4)
-    parser.add_argument("--smoke-test", action="store_true")
-    parser.add_argument("--samples-per-class", type=int, default=8)
     parser.add_argument("--max-train-steps", type=int, default=None)
     parser.add_argument("--max-val-steps", type=int, default=None)
     parser.add_argument(
@@ -67,8 +65,6 @@ def parse_args() -> argparse.Namespace:
 def resolve_output_dir(args: argparse.Namespace) -> Path:
     canonical_dataset_version = args.dataset_version.replace("-", "_")
     run_name = f"{canonical_dataset_version}_{args.model}_{args.strategy}"
-    if args.smoke_test:
-        run_name += "_smoke"
     return Path(args.output_root) / run_name
 
 
@@ -81,25 +77,13 @@ def main() -> None:
     output_dir = resolve_output_dir(args)
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    epochs = args.epochs
-    batch_size = args.batch_size
-    max_train_steps = args.max_train_steps
-    max_val_steps = args.max_val_steps
-    if args.smoke_test:
-        epochs = 1 if args.epochs == 15 else args.epochs
-        batch_size = 8 if args.batch_size == 32 else args.batch_size
-        max_train_steps = 5 if args.max_train_steps is None else args.max_train_steps
-        max_val_steps = 2 if args.max_val_steps is None else args.max_val_steps
-
     data_config = DataConfig(
         data_dir=data_dir,
         image_size=args.image_size,
-        batch_size=batch_size,
+        batch_size=args.batch_size,
         num_workers=args.num_workers,
         seed=args.seed,
         mixup_alpha=args.mixup_alpha,
-        smoke_test=args.smoke_test,
-        samples_per_class=args.samples_per_class,
     )
     loaders = create_dataloaders(data_config, split_manifest_path=output_dir / "split_manifest.json")
     metadata = loaders["metadata"]
@@ -116,12 +100,11 @@ def main() -> None:
 
     training_config = TrainingConfig(
         output_dir=str(output_dir),
-        epochs=epochs,
+        epochs=args.epochs,
         learning_rate=args.lr,
         weight_decay=args.weight_decay,
-        max_train_steps=max_train_steps,
-        max_val_steps=max_val_steps,
-        max_test_steps=max_val_steps if args.smoke_test else None,
+        max_train_steps=args.max_train_steps,
+        max_val_steps=args.max_val_steps,
     )
 
     history = train_model(
@@ -135,14 +118,12 @@ def main() -> None:
             "model_name": args.model,
             "strategy": args.strategy,
             "pretrained": pretrained,
-            "smoke_test": args.smoke_test,
         },
     )
     test_metrics = evaluate_model(
         model=model,
         dataloader=loaders["test_loader"],
         device=training_config.device,
-        max_steps=training_config.max_test_steps,
     )
     (output_dir / "test_metrics.json").write_text(json.dumps(test_metrics, indent=2), encoding="utf-8")
 
@@ -151,9 +132,8 @@ def main() -> None:
         "model_name": args.model,
         "strategy": args.strategy,
         "pretrained": pretrained,
-        "smoke_test": args.smoke_test,
-        "epochs": epochs,
-        "batch_size": batch_size,
+        "epochs": args.epochs,
+        "batch_size": args.batch_size,
         "val_loss": history[-1]["val_loss"],
         "val_top1_accuracy": history[-1]["val_accuracy"],
         "val_macro_f1": history[-1]["val_macro_f1"],

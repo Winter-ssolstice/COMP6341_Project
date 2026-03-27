@@ -16,7 +16,6 @@ COMP6341_Project/
   outputs/
     part1/
       baseline_resnet18/
-      smoke_test/
     part2/
       <dataset>_<model>_<strategy>/
       experiment_runs.csv
@@ -76,29 +75,11 @@ python3 train_baseline.py \
   --num-workers 4
 ```
 
-### Run the local smoke test
-
-```bash
-python3 train_baseline.py \
-  --data-dir Input/color \
-  --output-dir outputs/part1/smoke_test \
-  --smoke-test
-```
-
-### Smoke test defaults
-
-- `epochs=1`
-- `samples_per_class=8`
-- `batch_size=8`
-- `max_train_steps=5`
-- `max_val_steps=2`
-
 ### Part 1 outputs
 
 ```bash
 outputs/part1/
   baseline_resnet18/
-  smoke_test/
 ```
 
 Each Part 1 run writes:
@@ -170,17 +151,6 @@ python3 train_part2.py \
   --dataset-version background-segmented \
   --model vit_small \
   --strategy full_finetune
-```
-
-### Part 2 smoke test
-
-```bash
-python3 train_part2.py \
-  --dataset-version color \
-  --model resnet50 \
-  --strategy from_scratch \
-  --smoke-test \
-  --num-workers 0
 ```
 
 ### Part 2 outputs
