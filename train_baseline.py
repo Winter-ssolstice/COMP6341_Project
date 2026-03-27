@@ -15,7 +15,11 @@ from src.plantvillage.training import TrainingConfig, evaluate_model, train_mode
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Train a reusable PlantVillage baseline.")
     parser.add_argument("--data-dir", default="Input/color", help="Path to ImageFolder dataset root.")
-    parser.add_argument("--output-dir", default="outputs/resnet18_baseline", help="Directory for logs and checkpoints.")
+    parser.add_argument(
+        "--output-dir",
+        default="outputs/part1/baseline_resnet18",
+        help="Directory for logs and checkpoints.",
+    )
     parser.add_argument("--image-size", type=int, default=224)
     parser.add_argument("--batch-size", type=int, default=32)
     parser.add_argument("--num-workers", type=int, default=4)
@@ -35,6 +39,13 @@ def parse_args() -> argparse.Namespace:
         help="Backbone for the baseline runner.",
     )
     return parser.parse_args()
+
+
+def resolve_output_dir(args: argparse.Namespace) -> Path:
+    output_dir = Path(args.output_dir)
+    if args.smoke_test and str(output_dir) == "outputs/part1/baseline_resnet18":
+        return Path("outputs/part1/smoke_test")
+    return output_dir
 
 
 def build_model(model_name: str, num_classes: int) -> torch.nn.Module:
@@ -57,6 +68,7 @@ def build_model(model_name: str, num_classes: int) -> torch.nn.Module:
 def main() -> None:
     args = parse_args()
     torch.manual_seed(args.seed)
+    output_dir = resolve_output_dir(args)
 
     epochs = args.epochs
     batch_size = args.batch_size
@@ -78,13 +90,13 @@ def main() -> None:
         smoke_test=args.smoke_test,
         samples_per_class=args.samples_per_class,
     )
-    split_manifest_path = Path(args.output_dir) / "split_manifest.json"
+    split_manifest_path = output_dir / "split_manifest.json"
     loaders = create_dataloaders(data_config, split_manifest_path=split_manifest_path)
     metadata = loaders["metadata"]
 
     model = build_model(args.model, metadata["num_classes"])
     training_config = TrainingConfig(
-        output_dir=args.output_dir,
+        output_dir=str(output_dir),
         epochs=epochs,
         learning_rate=args.lr,
         weight_decay=args.weight_decay,
@@ -113,7 +125,7 @@ def main() -> None:
         training_config.device,
         max_steps=training_config.max_test_steps,
     )
-    Path(args.output_dir, "test_metrics.json").write_text(json.dumps(test_metrics, indent=2), encoding="utf-8")
+    Path(output_dir, "test_metrics.json").write_text(json.dumps(test_metrics, indent=2), encoding="utf-8")
 
     print("Final validation:", history[-1])
     print("Test metrics:", test_metrics)

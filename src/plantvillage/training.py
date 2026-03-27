@@ -19,7 +19,7 @@ class TrainingConfig:
     learning_rate: float = 1e-3
     weight_decay: float = 1e-4
     checkpoint_every: int = 1
-    device: str = "cuda" if torch.cuda.is_available() else "cpu"
+    device: str = "cuda" if torch.cuda.is_available() else ("mps" if torch.backends.mps.is_available() else "cpu")
     log_interval: int = 20
     max_train_steps: int | None = None
     max_val_steps: int | None = None
@@ -36,6 +36,24 @@ def _compute_accuracy(logits: torch.Tensor, targets: torch.Tensor) -> float:
     if targets.ndim == 2:
         targets = targets.argmax(dim=1)
     return (preds == targets).float().mean().item()
+
+
+def _compute_macro_f1_from_counts(confusion: torch.Tensor) -> float:
+    true_positives = confusion.diag()
+    predicted_positives = confusion.sum(dim=0)
+    actual_positives = confusion.sum(dim=1)
+
+    precision = torch.where(predicted_positives > 0, true_positives / predicted_positives, torch.zeros_like(true_positives))
+    recall = torch.where(actual_positives > 0, true_positives / actual_positives, torch.zeros_like(true_positives))
+    f1 = torch.where(
+        (precision + recall) > 0,
+        2 * precision * recall / (precision + recall),
+        torch.zeros_like(precision),
+    )
+    valid_classes = actual_positives > 0
+    if valid_classes.any():
+        return f1[valid_classes].mean().item()
+    return 0.0
 
 
 def _setup_logger(output_dir: Path) -> logging.Logger:
@@ -112,6 +130,7 @@ def _run_epoch(
     running_acc = 0.0
     total_samples = 0
     criterion = soft_target_cross_entropy
+    confusion: torch.Tensor | None = None
 
     for batch_idx, (images, targets) in enumerate(dataloader, start=1):
         images = images.to(device, non_blocking=True)
@@ -131,8 +150,18 @@ def _run_epoch(
 
         batch_size = images.size(0)
         running_loss += loss.item() * batch_size
-        running_acc += _compute_accuracy(logits.detach(), targets.detach()) * batch_size
+        detached_logits = logits.detach()
+        detached_targets = targets.detach()
+        running_acc += _compute_accuracy(detached_logits, detached_targets) * batch_size
         total_samples += batch_size
+
+        target_indices = detached_targets.argmax(dim=1) if detached_targets.ndim == 2 else detached_targets
+        pred_indices = detached_logits.argmax(dim=1)
+        num_classes = detached_logits.size(1)
+        if confusion is None:
+            confusion = torch.zeros((num_classes, num_classes), dtype=torch.long)
+        flat_indices = target_indices.cpu() * num_classes + pred_indices.cpu()
+        confusion += torch.bincount(flat_indices, minlength=num_classes * num_classes).reshape(num_classes, num_classes)
 
         if is_train and batch_idx % log_interval == 0:
             logger.info(
@@ -150,6 +179,7 @@ def _run_epoch(
     return {
         "loss": running_loss / total_samples,
         "accuracy": running_acc / total_samples,
+        "macro_f1": _compute_macro_f1_from_counts(confusion) if confusion is not None else 0.0,
     }
 
 
@@ -166,8 +196,12 @@ def train_model(
 
     device = torch.device(config.device)
     model = model.to(device)
+    trainable_parameters = [param for param in model.parameters() if param.requires_grad]
+    if not trainable_parameters:
+        raise ValueError("Model has no trainable parameters. Check the chosen training strategy.")
+
     optimizer = torch.optim.AdamW(
-        model.parameters(),
+        trainable_parameters,
         lr=config.learning_rate,
         weight_decay=config.weight_decay,
     )
@@ -207,8 +241,10 @@ def train_model(
             "epoch": epoch,
             "train_loss": train_metrics["loss"],
             "train_accuracy": train_metrics["accuracy"],
+            "train_macro_f1": train_metrics["macro_f1"],
             "val_loss": val_metrics["loss"],
             "val_accuracy": val_metrics["accuracy"],
+            "val_macro_f1": val_metrics["macro_f1"],
             "epoch_seconds": time.time() - epoch_start,
         }
         history.append(epoch_metrics)
@@ -216,12 +252,14 @@ def train_model(
         _plot_loss_curves(output_dir, history)
 
         logger.info(
-            "epoch=%s train_loss=%.4f train_acc=%.4f val_loss=%.4f val_acc=%.4f duration=%.2fs",
+            "epoch=%s train_loss=%.4f train_acc=%.4f train_f1=%.4f val_loss=%.4f val_acc=%.4f val_f1=%.4f duration=%.2fs",
             epoch,
             epoch_metrics["train_loss"],
             epoch_metrics["train_accuracy"],
+            epoch_metrics["train_macro_f1"],
             epoch_metrics["val_loss"],
             epoch_metrics["val_accuracy"],
+            epoch_metrics["val_macro_f1"],
             epoch_metrics["epoch_seconds"],
         )
 
@@ -257,4 +295,5 @@ def evaluate_model(
     return {
         "test_loss": metrics["loss"],
         "test_accuracy": metrics["accuracy"],
+        "test_macro_f1": metrics["macro_f1"],
     }
