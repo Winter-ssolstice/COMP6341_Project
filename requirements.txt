@@ -5,3 +5,4 @@ torchvision==0.24.1
 matplotlib
 Pillow
 timm
+grad-cam

@@ -4,6 +4,7 @@ Reusable PlantVillage project scaffold for:
 
 - Part 1: data preparation and reusable training pipeline
 - Part 2: model training, transfer learning comparison, and ablation studies
+- Part 3: GradCAM-based explainability analysis for the selected ViT-Small model
 
 ## Project layout
 
@@ -25,10 +26,12 @@ COMP6341_Project/
     training.py
     models.py
     results.py
+    explainability.py
   train_baseline.py
   train_part2.py
   summarize_results.py
   select_best_part2_model.py
+  run_part3_gradcam.py
 ```
 
 ## Dataset layout
@@ -195,6 +198,84 @@ Each Part 2 run writes the same per-run artifacts as Part 1 plus:
 - `best_model_ranking.csv`: ranked comparison of the four base `color` experiments
 - `best_model_summary.json`: selected best base model plus ablation commands and selection metadata
 - `comparison_results.csv`: final combined comparison table generated after all base-model and ablation runs are complete
+
+## Part 3
+
+### Scope
+
+- `run_part3_gradcam.py`
+  - fixed Part 3 entry point for `vit_small + full_finetune`
+- `src/plantvillage/explainability.py`
+  - reloads the three Part 2 ViT runs
+  - re-runs test set inference
+  - aligns `grayscale` and `background_segmented` to the `color` test split for fair cross-version comparison
+  - generates GradCAM and GradCAM++ representative figures
+  - writes prediction tables and Markdown analysis
+
+### Assumptions
+
+Part 3 is fixed to the selected best model:
+
+- `color_vit_small_full_finetune`
+- `grayscale_vit_small_full_finetune`
+- `background_segmented_vit_small_full_finetune`
+
+Each run directory is expected to contain:
+
+- `best.pt`
+- `run_config.json`
+- `split_manifest.json`
+
+### Run Part 3
+
+Use the default command to analyze the three ViT-Small runs and write all outputs under `outputs/part3/vit_small_full_finetune/`.
+
+```powershell
+python .\run_part3_gradcam.py
+```
+
+If you want a smaller-memory inference setup, you can override both batch size and workers explicitly:
+
+```powershell
+python .\run_part3_gradcam.py --batch-size 8 --num-workers 0
+```
+
+### Part 3 outputs
+
+```text
+outputs/part3/
+  vit_small_full_finetune/
+    analysis.md
+    comparisons/
+      correct_<class>.png
+      incorrect_<class>.png
+    color/
+      metrics.json
+      predictions.csv
+      representative_samples.csv
+      correct_samples/
+      incorrect_samples/
+    grayscale/
+      metrics.json
+      predictions.csv
+      representative_samples.csv
+      correct_samples/
+      incorrect_samples/
+    background_segmented/
+      metrics.json
+      predictions.csv
+      representative_samples.csv
+      correct_samples/
+      incorrect_samples/
+```
+
+Part 3 writes:
+
+- `analysis.md`: report-ready qualitative summary with metrics, hardest classes, confusion patterns, and background-segmentation comparison notes
+- `predictions.csv`: per-image test predictions for each dataset version
+- `representative_samples.csv`: one correct and one incorrect representative sample per class when available
+- `correct_samples/*.png` and `incorrect_samples/*.png`: original image plus GradCAM and GradCAM++ overlays
+- `comparisons/*.png`: matched `color` vs `background_segmented` visual comparisons for representative samples
 
 ## Notes
 
