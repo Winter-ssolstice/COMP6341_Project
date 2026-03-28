@@ -18,7 +18,6 @@ COMP6341_Project/
       baseline_resnet18/
     part2/
       <dataset>_<model>_<strategy>/
-      experiment_runs.csv
       comparison_results.csv
   src/plantvillage/
     data.py
