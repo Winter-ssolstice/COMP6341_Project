@@ -28,6 +28,7 @@ COMP6341_Project/
   train_baseline.py
   train_part2.py
   summarize_results.py
+  select_best_part2_model.py
 ```
 
 ## Dataset layout
@@ -113,7 +114,7 @@ Each Part 1 run writes:
 - `vit_small` + `full_finetune`
 - dataset versions: `color`, `grayscale`, `background-segmented`
 
-### Example commands
+### Recommended workflow
 
 Recommended starting points for better Part 2 results on a typical Windows workstation with an NVIDIA GPU:
 
@@ -121,9 +122,11 @@ Recommended starting points for better Part 2 results on a typical Windows works
 - EfficientNet-B3 linear probing: `epochs=15`, `batch_size=16`, `num_workers=4`
 - EfficientNet-B3 full fine-tuning: `epochs=20`, `batch_size=16`, `num_workers=4`
 - ViT-Small full fine-tuning: `epochs=20`, `batch_size=16`, `num_workers=4`
-- Ablation runs: reuse the best model's hyperparameters across `color`, `grayscale`, and `background-segmented` for a fair comparison
+- Ablation runs: reuse the selected best base model and its hyperparameters across `color`, `grayscale`, and `background-segmented` for a fair comparison
 
 If you hit out-of-memory errors, reduce `batch-size` before reducing `epochs`.
+
+### Step 1: Run the four base `color` experiments
 
 ```powershell
 # ResNet-50 from scratch baseline
@@ -137,13 +140,39 @@ python .\train_part2.py --dataset-version color --model efficientnet_b3 --strate
 
 # ViT-Small full fine-tuning
 python .\train_part2.py --dataset-version color --model vit_small --strategy full_finetune --epochs 20 --batch-size 16 --num-workers 4
-
-# Ablation on grayscale
-python .\train_part2.py --dataset-version grayscale --model vit_small --strategy full_finetune --epochs 20 --batch-size 16 --num-workers 4
-
-# Ablation on background-segmented images
-python .\train_part2.py --dataset-version background-segmented --model vit_small --strategy full_finetune --epochs 20 --batch-size 16 --num-workers 4
 ```
+
+### Step 2: Select the best base model for ablation
+
+After the four base `color` runs finish, select the best model by validation Macro F1:
+
+```powershell
+python .\select_best_part2_model.py --output-root .\outputs\part2 --dataset-version color
+```
+
+This writes:
+
+- `outputs/part2/best_model_ranking.csv`: ranked comparison of the four base models
+- `outputs/part2/best_model_summary.json`: the selected best model and the selection rule
+
+### Step 3: Run ablation with the selected best model
+
+Open `outputs/part2/best_model_summary.json`, copy the `ablation_commands` entries, and run them one by one:
+
+```powershell
+python .\train_part2.py --dataset-version grayscale --model vit_small --strategy full_finetune --epochs 20 --batch-size 16 --num-workers 4 --pretrained
+python .\train_part2.py --dataset-version background-segmented --model vit_small --strategy full_finetune --epochs 20 --batch-size 16 --num-workers 4 --pretrained
+```
+
+### Step 4: Aggregate all Part 2 experiment results
+
+After the four base runs and the ablation runs are complete, aggregate everything into one comparison table:
+
+```powershell
+python .\summarize_results.py --output-root .\outputs\part2
+```
+
+This writes `outputs/part2/comparison_results.csv`.
 
 ### Part 2 outputs
 
@@ -153,24 +182,19 @@ outputs/part2/
   color_efficientnet_b3_linear_probing/
   color_efficientnet_b3_full_finetune/
   color_vit_small_full_finetune/
-  grayscale_vit_small_full_finetune/
-  background_segmented_vit_small_full_finetune/
-  experiment_runs.csv
+  color_<best_model>_<strategy>/
+  grayscale_<best_model>_<strategy>/
+  background_segmented_<best_model>_<strategy>/
+  best_model_ranking.csv
+  best_model_summary.json
   comparison_results.csv
 ```
 
 Each Part 2 run writes the same per-run artifacts as Part 1 plus:
 
-- `experiment_runs.csv`: row-wise run registry appended after each training run
-- `comparison_results.csv`: clean comparison table generated after aggregation
-
-### Aggregate experiment results
-
-```powershell
-python .\summarize_results.py --output-root .\outputs\part2
-```
-
-This writes `outputs/part2/comparison_results.csv`.
+- `best_model_ranking.csv`: ranked comparison of the four base `color` experiments
+- `best_model_summary.json`: selected best base model plus ablation commands and selection metadata
+- `comparison_results.csv`: final combined comparison table generated after all base-model and ablation runs are complete
 
 ## Notes
 
