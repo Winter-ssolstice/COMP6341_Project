@@ -68,8 +68,11 @@ python -m pip install -r .\requirements.txt
 
 ### Run the baseline
 
+Recommended for stronger Part 1 results on a typical Windows workstation with an NVIDIA GPU: `epochs=20`, `batch_size=32`, `num_workers=4`.
+If you hit out-of-memory errors, reduce `batch-size` first.
+
 ```powershell
-python .\train_baseline.py --data-dir .\Input\color --output-dir .\outputs\part1\baseline_resnet18 --model resnet18 --epochs 10 --batch-size 32 --num-workers 4
+python .\train_baseline.py --data-dir .\Input\color --output-dir .\outputs\part1\baseline_resnet18 --model resnet18 --epochs 20 --batch-size 32 --num-workers 4
 ```
 
 ### Part 1 outputs
@@ -112,24 +115,34 @@ Each Part 1 run writes:
 
 ### Example commands
 
+Recommended starting points for better Part 2 results on a typical Windows workstation with an NVIDIA GPU:
+
+- ResNet-50 from scratch: `epochs=30`, `batch_size=32`, `num_workers=4`
+- EfficientNet-B3 linear probing: `epochs=15`, `batch_size=16`, `num_workers=4`
+- EfficientNet-B3 full fine-tuning: `epochs=20`, `batch_size=16`, `num_workers=4`
+- ViT-Small full fine-tuning: `epochs=20`, `batch_size=16`, `num_workers=4`
+- Ablation runs: reuse the best model's hyperparameters across `color`, `grayscale`, and `background-segmented` for a fair comparison
+
+If you hit out-of-memory errors, reduce `batch-size` before reducing `epochs`.
+
 ```powershell
 # ResNet-50 from scratch baseline
-python .\train_part2.py --dataset-version color --model resnet50 --strategy from_scratch
+python .\train_part2.py --dataset-version color --model resnet50 --strategy from_scratch --epochs 30 --batch-size 32 --num-workers 4
 
 # EfficientNet-B3 linear probing
-python .\train_part2.py --dataset-version color --model efficientnet_b3 --strategy linear_probing
+python .\train_part2.py --dataset-version color --model efficientnet_b3 --strategy linear_probing --epochs 15 --batch-size 16 --num-workers 4
 
 # EfficientNet-B3 full fine-tuning
-python .\train_part2.py --dataset-version color --model efficientnet_b3 --strategy full_finetune
+python .\train_part2.py --dataset-version color --model efficientnet_b3 --strategy full_finetune --epochs 20 --batch-size 16 --num-workers 4
 
 # ViT-Small full fine-tuning
-python .\train_part2.py --dataset-version color --model vit_small --strategy full_finetune
+python .\train_part2.py --dataset-version color --model vit_small --strategy full_finetune --epochs 20 --batch-size 16 --num-workers 4
 
 # Ablation on grayscale
-python .\train_part2.py --dataset-version grayscale --model vit_small --strategy full_finetune
+python .\train_part2.py --dataset-version grayscale --model vit_small --strategy full_finetune --epochs 20 --batch-size 16 --num-workers 4
 
 # Ablation on background-segmented images
-python .\train_part2.py --dataset-version background-segmented --model vit_small --strategy full_finetune
+python .\train_part2.py --dataset-version background-segmented --model vit_small --strategy full_finetune --epochs 20 --batch-size 16 --num-workers 4
 ```
 
 ### Part 2 outputs
