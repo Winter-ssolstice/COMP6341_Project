@@ -45,8 +45,11 @@ This matches the local repository structure already present in this workspace.
 
 ## Install
 
-```bash
-python3 -m pip install -r requirements.txt
+The `requirements.txt` file is pinned to the official PyTorch CUDA 12.8 wheels for Windows + NVIDIA GPU environments.
+
+```powershell
+python -m pip install --upgrade pip
+python -m pip install -r .\requirements.txt
 ```
 
 ## Part 1
@@ -65,19 +68,13 @@ python3 -m pip install -r requirements.txt
 
 ### Run the baseline
 
-```bash
-python3 train_baseline.py \
-  --data-dir Input/color \
-  --output-dir outputs/part1/baseline_resnet18 \
-  --model resnet18 \
-  --epochs 10 \
-  --batch-size 32 \
-  --num-workers 4
+```powershell
+python .\train_baseline.py --data-dir .\Input\color --output-dir .\outputs\part1\baseline_resnet18 --model resnet18 --epochs 10 --batch-size 32 --num-workers 4
 ```
 
 ### Part 1 outputs
 
-```bash
+```text
 outputs/part1/
   baseline_resnet18/
 ```
@@ -115,47 +112,29 @@ Each Part 1 run writes:
 
 ### Example commands
 
-```bash
+```powershell
 # ResNet-50 from scratch baseline
-python3 train_part2.py \
-  --dataset-version color \
-  --model resnet50 \
-  --strategy from_scratch
+python .\train_part2.py --dataset-version color --model resnet50 --strategy from_scratch
 
 # EfficientNet-B3 linear probing
-python3 train_part2.py \
-  --dataset-version color \
-  --model efficientnet_b3 \
-  --strategy linear_probing
+python .\train_part2.py --dataset-version color --model efficientnet_b3 --strategy linear_probing
 
 # EfficientNet-B3 full fine-tuning
-python3 train_part2.py \
-  --dataset-version color \
-  --model efficientnet_b3 \
-  --strategy full_finetune
+python .\train_part2.py --dataset-version color --model efficientnet_b3 --strategy full_finetune
 
 # ViT-Small full fine-tuning
-python3 train_part2.py \
-  --dataset-version color \
-  --model vit_small \
-  --strategy full_finetune
+python .\train_part2.py --dataset-version color --model vit_small --strategy full_finetune
 
 # Ablation on grayscale
-python3 train_part2.py \
-  --dataset-version grayscale \
-  --model vit_small \
-  --strategy full_finetune
+python .\train_part2.py --dataset-version grayscale --model vit_small --strategy full_finetune
 
 # Ablation on background-segmented images
-python3 train_part2.py \
-  --dataset-version background-segmented \
-  --model vit_small \
-  --strategy full_finetune
+python .\train_part2.py --dataset-version background-segmented --model vit_small --strategy full_finetune
 ```
 
 ### Part 2 outputs
 
-```bash
+```text
 outputs/part2/
   color_resnet50_from_scratch/
   color_efficientnet_b3_linear_probing/
@@ -174,8 +153,8 @@ Each Part 2 run writes the same per-run artifacts as Part 1 plus:
 
 ### Aggregate experiment results
 
-```bash
-python3 summarize_results.py --output-root outputs/part2
+```powershell
+python .\summarize_results.py --output-root .\outputs\part2
 ```
 
 This writes `outputs/part2/comparison_results.csv`.
