@@ -1,0 +1,77 @@
+dataset_version,class_name,sample_type,status,relative_path,pred_label,confidence,figure_path,note
+color,Apple___Apple_scab,correct,selected,Apple___Apple_scab/fc9c12dc-1bdb-402d-ada8-dc1b33c84d5b___FREC_Scab 2932.JPG,Apple___Apple_scab,0.9919,color/correct_samples/correct_apple___apple_scab.png,
+color,Apple___Apple_scab,incorrect,missing,,,,,no misclassified sample found
+color,Apple___Black_rot,correct,selected,Apple___Black_rot/77843368-1495-4113-b865-83e381f0641e___JR_FrgE.S 8791.JPG,Apple___Black_rot,0.9898,color/correct_samples/correct_apple___black_rot.png,
+color,Apple___Black_rot,incorrect,missing,,,,,no misclassified sample found
+color,Apple___Cedar_apple_rust,correct,selected,Apple___Cedar_apple_rust/d7fb4740-9707-484f-9809-b7efa8f7851d___FREC_C.Rust 4344.JPG,Apple___Cedar_apple_rust,0.9927,color/correct_samples/correct_apple___cedar_apple_rust.png,
+color,Apple___Cedar_apple_rust,incorrect,missing,,,,,no misclassified sample found
+color,Apple___healthy,correct,selected,Apple___healthy/818082df-492c-4c5e-a3bb-a3153818d816___RS_HL 7319.JPG,Apple___healthy,0.9918,color/correct_samples/correct_apple___healthy.png,
+color,Apple___healthy,incorrect,missing,,,,,no misclassified sample found
+color,Blueberry___healthy,correct,selected,Blueberry___healthy/da4cfc81-f79b-464b-8d00-0d4adeaaf0a1___RS_HL 2557.JPG,Blueberry___healthy,0.9961,color/correct_samples/correct_blueberry___healthy.png,
+color,Blueberry___healthy,incorrect,missing,,,,,no misclassified sample found
+color,Cherry_(including_sour)___Powdery_mildew,correct,selected,Cherry_(including_sour)___Powdery_mildew/9a190630-f11a-4e5b-9495-3c4535bb4144___FREC_Pwd.M 0367.JPG,Cherry_(including_sour)___Powdery_mildew,0.9934,color/correct_samples/correct_cherry__including_sour____powdery_mildew.png,
+color,Cherry_(including_sour)___Powdery_mildew,incorrect,missing,,,,,no misclassified sample found
+color,Cherry_(including_sour)___healthy,correct,selected,Cherry_(including_sour)___healthy/c7003e27-49fe-4b61-a6d2-a72c7595f297___JR_HL 9893.JPG,Cherry_(including_sour)___healthy,0.9889,color/correct_samples/correct_cherry__including_sour____healthy.png,
+color,Cherry_(including_sour)___healthy,incorrect,missing,,,,,no misclassified sample found
+color,Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot,correct,selected,Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot/1b6664a7-03f9-4ced-8dcd-b85a18554aa5___RS_GLSp 7324.JPG,Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot,0.9881,color/correct_samples/correct_corn__maize____cercospora_leaf_spot_gray_leaf_spot.png,
+color,Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot,incorrect,selected,Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot/2162861c-60d9-4831-b922-362d70a47b92___RS_GLSp 4554.JPG,Corn_(maize)___Northern_Leaf_Blight,0.7542,color/incorrect_samples/incorrect_corn__maize____cercospora_leaf_spot_gray_leaf_spot.png,
+color,Corn_(maize)___Common_rust_,correct,selected,Corn_(maize)___Common_rust_/RS_Rust 2475.JPG,Corn_(maize)___Common_rust_,0.9928,color/correct_samples/correct_corn__maize____common_rust.png,
+color,Corn_(maize)___Common_rust_,incorrect,missing,,,,,no misclassified sample found
+color,Corn_(maize)___Northern_Leaf_Blight,correct,selected,Corn_(maize)___Northern_Leaf_Blight/23f7ce7f-23fc-42b1-86d0-69c7f7010812___RS_NLB 3639.JPG,Corn_(maize)___Northern_Leaf_Blight,0.9858,color/correct_samples/correct_corn__maize____northern_leaf_blight.png,
+color,Corn_(maize)___Northern_Leaf_Blight,incorrect,selected,Corn_(maize)___Northern_Leaf_Blight/6089948d-346f-4745-af12-4355a7ef3dea___RS_NLB 3800.JPG,Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot,0.9013,color/incorrect_samples/incorrect_corn__maize____northern_leaf_blight.png,
+color,Corn_(maize)___healthy,correct,selected,Corn_(maize)___healthy/363ba8b2-4b66-4caa-ae2c-df6523aa6da6___R.S_HL 8234 copy 2.jpg,Corn_(maize)___healthy,0.9866,color/correct_samples/correct_corn__maize____healthy.png,
+color,Corn_(maize)___healthy,incorrect,missing,,,,,no misclassified sample found
+color,Grape___Black_rot,correct,selected,Grape___Black_rot/aeb30f42-c4b4-451a-9e5c-1e0f7510b023___FAM_B.Rot 0630.JPG,Grape___Black_rot,0.9956,color/correct_samples/correct_grape___black_rot.png,
+color,Grape___Black_rot,incorrect,selected,Grape___Black_rot/fa7dafca-d9a3-4d58-aa56-da5feae6f6da___FAM_B.Rot 3312.JPG,Grape___Leaf_blight_(Isariopsis_Leaf_Spot),0.5954,color/incorrect_samples/incorrect_grape___black_rot.png,
+color,Grape___Esca_(Black_Measles),correct,selected,Grape___Esca_(Black_Measles)/011f307f-e06b-4604-9419-d940f7b00290___FAM_B.Msls 1096.JPG,Grape___Esca_(Black_Measles),0.9930,color/correct_samples/correct_grape___esca__black_measles.png,
+color,Grape___Esca_(Black_Measles),incorrect,missing,,,,,no misclassified sample found
+color,Grape___Leaf_blight_(Isariopsis_Leaf_Spot),correct,selected,Grape___Leaf_blight_(Isariopsis_Leaf_Spot)/fa52d9fa-9ebc-40d1-9132-6e63fec927f2___FAM_L.Blight 3695.JPG,Grape___Leaf_blight_(Isariopsis_Leaf_Spot),0.9927,color/correct_samples/correct_grape___leaf_blight__isariopsis_leaf_spot.png,
+color,Grape___Leaf_blight_(Isariopsis_Leaf_Spot),incorrect,missing,,,,,no misclassified sample found
+color,Grape___healthy,correct,selected,Grape___healthy/632553f4-7a29-4724-88ff-fbdbfbbc8168___Mt.N.V_HL 6069.JPG,Grape___healthy,0.9914,color/correct_samples/correct_grape___healthy.png,
+color,Grape___healthy,incorrect,missing,,,,,no misclassified sample found
+color,Orange___Haunglongbing_(Citrus_greening),correct,selected,Orange___Haunglongbing_(Citrus_greening)/06e72bcc-59b3-4278-ad9b-4a34d3a481cc___UF.Citrus_HLB_Lab 1228.JPG,Orange___Haunglongbing_(Citrus_greening),0.9908,color/correct_samples/correct_orange___haunglongbing__citrus_greening.png,
+color,Orange___Haunglongbing_(Citrus_greening),incorrect,selected,Orange___Haunglongbing_(Citrus_greening)/4365fde5-37f0-448f-9e80-f081c8beb979___CREC_HLB 3924.JPG,"Pepper,_bell___healthy",0.9155,color/incorrect_samples/incorrect_orange___haunglongbing__citrus_greening.png,
+color,Peach___Bacterial_spot,correct,selected,Peach___Bacterial_spot/a72f9871-d2e3-49f3-b10a-bad425b626eb___Rut._Bact.S 3476.JPG,Peach___Bacterial_spot,0.9901,color/correct_samples/correct_peach___bacterial_spot.png,
+color,Peach___Bacterial_spot,incorrect,selected,Peach___Bacterial_spot/6230cf24-939a-463d-9b94-535280afca8c___Rutg._Bact.S 1210.JPG,Tomato___Septoria_leaf_spot,0.9544,color/incorrect_samples/incorrect_peach___bacterial_spot.png,
+color,Peach___healthy,correct,selected,Peach___healthy/859a8beb-ffa8-4dd5-9583-f628b25bb873___Rutg._HL 3717.JPG,Peach___healthy,0.9892,color/correct_samples/correct_peach___healthy.png,
+color,Peach___healthy,incorrect,missing,,,,,no misclassified sample found
+color,"Pepper,_bell___Bacterial_spot",correct,selected,"Pepper,_bell___Bacterial_spot/9728896c-149f-415b-86b3-ef5b95dd9143___JR_B.Spot 8862.JPG","Pepper,_bell___Bacterial_spot",0.9929,color/correct_samples/correct_pepper__bell___bacterial_spot.png,
+color,"Pepper,_bell___Bacterial_spot",incorrect,selected,"Pepper,_bell___Bacterial_spot/3dcf00d5-a9c0-4920-8767-2355f3f85bc4___NREC_B.Spot 9218.JPG","Pepper,_bell___healthy",0.9847,color/incorrect_samples/incorrect_pepper__bell___bacterial_spot.png,
+color,"Pepper,_bell___healthy",correct,selected,"Pepper,_bell___healthy/12e22bb7-46e1-4714-8139-83e3a9bfef07___JR_HL 7813.JPG","Pepper,_bell___healthy",0.9948,color/correct_samples/correct_pepper__bell___healthy.png,
+color,"Pepper,_bell___healthy",incorrect,missing,,,,,no misclassified sample found
+color,Potato___Early_blight,correct,selected,Potato___Early_blight/f3360814-9e4c-46b0-85ed-73fc77ef7810___RS_Early.B 7550.JPG,Potato___Early_blight,0.9939,color/correct_samples/correct_potato___early_blight.png,
+color,Potato___Early_blight,incorrect,selected,Potato___Early_blight/1082eee1-189d-4e0f-96b5-8b1393be4c4c___RS_Early.B 8743.JPG,Tomato___Early_blight,0.7360,color/incorrect_samples/incorrect_potato___early_blight.png,
+color,Potato___Late_blight,correct,selected,Potato___Late_blight/87681326-2843-4e63-9042-602b08a98a66___RS_LB 4145.JPG,Potato___Late_blight,0.9875,color/correct_samples/correct_potato___late_blight.png,
+color,Potato___Late_blight,incorrect,missing,,,,,no misclassified sample found
+color,Potato___healthy,correct,selected,Potato___healthy/af15ac00-67ff-4114-ace8-6dca48b94665___RS_HL 1865.JPG,Potato___healthy,0.9905,color/correct_samples/correct_potato___healthy.png,
+color,Potato___healthy,incorrect,selected,Potato___healthy/f0fdde26-78b4-46f0-9eb8-7c2a743d34aa___RS_HL 4165.JPG,Tomato___Target_Spot,0.7618,color/incorrect_samples/incorrect_potato___healthy.png,
+color,Raspberry___healthy,correct,selected,Raspberry___healthy/0f5c8734-f6d1-442f-832a-7c938053ca1e___Mary_HL 9139.JPG,Raspberry___healthy,0.9932,color/correct_samples/correct_raspberry___healthy.png,
+color,Raspberry___healthy,incorrect,missing,,,,,no misclassified sample found
+color,Soybean___healthy,correct,selected,Soybean___healthy/6a613fb4-5edb-415f-b577-c0aba1208a8d___RS_HL 4433.JPG,Soybean___healthy,0.9931,color/correct_samples/correct_soybean___healthy.png,
+color,Soybean___healthy,incorrect,selected,Soybean___healthy/ea800de9-cad6-4b81-8fa7-420d71ca9157___RS_HL 6240.JPG,Apple___healthy,0.7898,color/incorrect_samples/incorrect_soybean___healthy.png,
+color,Squash___Powdery_mildew,correct,selected,Squash___Powdery_mildew/dc97df30-60d1-4e2f-bbd0-01d13a410bb9___MD_Powd.M 0305.JPG,Squash___Powdery_mildew,0.9910,color/correct_samples/correct_squash___powdery_mildew.png,
+color,Squash___Powdery_mildew,incorrect,missing,,,,,no misclassified sample found
+color,Strawberry___Leaf_scorch,correct,selected,Strawberry___Leaf_scorch/261b9095-4d7e-4546-8f92-dd6979b0fc22___RS_L.Scorch 1391.JPG,Strawberry___Leaf_scorch,0.9923,color/correct_samples/correct_strawberry___leaf_scorch.png,
+color,Strawberry___Leaf_scorch,incorrect,missing,,,,,no misclassified sample found
+color,Strawberry___healthy,correct,selected,Strawberry___healthy/e54205fc-ef01-4553-8305-0067ebf3bdc5___RS_HL 1839.JPG,Strawberry___healthy,0.9963,color/correct_samples/correct_strawberry___healthy.png,
+color,Strawberry___healthy,incorrect,missing,,,,,no misclassified sample found
+color,Tomato___Bacterial_spot,correct,selected,Tomato___Bacterial_spot/18ac424a-de74-40f4-b830-74384ae67302___GCREC_Bact.Sp 3480.JPG,Tomato___Bacterial_spot,0.9898,color/correct_samples/correct_tomato___bacterial_spot.png,
+color,Tomato___Bacterial_spot,incorrect,selected,Tomato___Bacterial_spot/13b8bbd3-32cf-4c69-bffb-870b7b6720e0___UF.GRC_BS_Lab Leaf 8890.JPG,Tomato___Tomato_Yellow_Leaf_Curl_Virus,0.8393,color/incorrect_samples/incorrect_tomato___bacterial_spot.png,
+color,Tomato___Early_blight,correct,selected,Tomato___Early_blight/b559ff8f-efd7-4897-8596-69447c2e6b89___RS_Erly.B 6409.JPG,Tomato___Early_blight,0.9939,color/correct_samples/correct_tomato___early_blight.png,
+color,Tomato___Early_blight,incorrect,selected,Tomato___Early_blight/aca65de6-6464-4f8c-803d-b55f92f950f8___RS_Erly.B 6663.JPG,Tomato___Septoria_leaf_spot,0.9660,color/incorrect_samples/incorrect_tomato___early_blight.png,
+color,Tomato___Late_blight,correct,selected,Tomato___Late_blight/523e5382-14a5-4849-bbec-1bfab9aeecfb___GHLB2 Leaf 8776.JPG,Tomato___Late_blight,0.9946,color/correct_samples/correct_tomato___late_blight.png,
+color,Tomato___Late_blight,incorrect,selected,Tomato___Late_blight/814df7b9-2950-4628-a03c-bfae17a4f0a8___GHLB2 Leaf 146.1.JPG,Tomato___healthy,0.6245,color/incorrect_samples/incorrect_tomato___late_blight.png,
+color,Tomato___Leaf_Mold,correct,selected,Tomato___Leaf_Mold/f482c835-b8f2-4ebc-88b2-3b6f58b8a696___Crnl_L.Mold 8949.JPG,Tomato___Leaf_Mold,0.9911,color/correct_samples/correct_tomato___leaf_mold.png,
+color,Tomato___Leaf_Mold,incorrect,selected,Tomato___Leaf_Mold/cc42f7f9-ecbf-4adf-b1df-1307218aac13___Crnl_L.Mold 8710.JPG,Tomato___Septoria_leaf_spot,0.9549,color/incorrect_samples/incorrect_tomato___leaf_mold.png,
+color,Tomato___Septoria_leaf_spot,correct,selected,Tomato___Septoria_leaf_spot/9ba317fe-1487-4501-91c3-c84f86ae6832___Keller.St_CG 1798.JPG,Tomato___Septoria_leaf_spot,0.9931,color/correct_samples/correct_tomato___septoria_leaf_spot.png,
+color,Tomato___Septoria_leaf_spot,incorrect,selected,Tomato___Septoria_leaf_spot/fb6bea39-f361-457c-b73e-fe3b2dbe6259___Matt.S_CG 2786.JPG,Tomato___Late_blight,0.5840,color/incorrect_samples/incorrect_tomato___septoria_leaf_spot.png,
+color,Tomato___Spider_mites Two-spotted_spider_mite,correct,selected,Tomato___Spider_mites Two-spotted_spider_mite/ef6e3d9d-502b-46c1-9f21-c32b54d2cb7a___Com.G_SpM_FL 9391.JPG,Tomato___Spider_mites Two-spotted_spider_mite,0.9948,color/correct_samples/correct_tomato___spider_mites_two_spotted_spider_mite.png,
+color,Tomato___Spider_mites Two-spotted_spider_mite,incorrect,selected,Tomato___Spider_mites Two-spotted_spider_mite/6b4d8881-2f22-4f92-b35f-d1686e9a3b81___Com.G_SpM_FL 1169.JPG,Tomato___Target_Spot,0.7835,color/incorrect_samples/incorrect_tomato___spider_mites_two_spotted_spider_mite.png,
+color,Tomato___Target_Spot,correct,selected,Tomato___Target_Spot/d9dcd400-3863-447c-a365-f5b14e401aa6___Com.G_TgS_FL 9836.JPG,Tomato___Target_Spot,0.9921,color/correct_samples/correct_tomato___target_spot.png,
+color,Tomato___Target_Spot,incorrect,selected,Tomato___Target_Spot/430c9666-bb5e-49fe-9753-9b6498e9f7c1___Com.G_TgS_FL 0706.JPG,Tomato___Septoria_leaf_spot,0.8311,color/incorrect_samples/incorrect_tomato___target_spot.png,
+color,Tomato___Tomato_Yellow_Leaf_Curl_Virus,correct,selected,Tomato___Tomato_Yellow_Leaf_Curl_Virus/a7a73400-263d-4796-87fc-4e8e00fc8a5b___UF.GRC_YLCV_Lab 03248.JPG,Tomato___Tomato_Yellow_Leaf_Curl_Virus,0.9939,color/correct_samples/correct_tomato___tomato_yellow_leaf_curl_virus.png,
+color,Tomato___Tomato_Yellow_Leaf_Curl_Virus,incorrect,selected,Tomato___Tomato_Yellow_Leaf_Curl_Virus/13c86d01-0086-4a2a-8215-7a50f9bf4dfa___YLCV_GCREC 2075.JPG,Tomato___Spider_mites Two-spotted_spider_mite,0.9713,color/incorrect_samples/incorrect_tomato___tomato_yellow_leaf_curl_virus.png,
+color,Tomato___Tomato_mosaic_virus,correct,selected,Tomato___Tomato_mosaic_virus/6f341314-6084-4784-a3ba-0a9bdc944366___PSU_CG 2372.JPG,Tomato___Tomato_mosaic_virus,0.9965,color/correct_samples/correct_tomato___tomato_mosaic_virus.png,
+color,Tomato___Tomato_mosaic_virus,incorrect,missing,,,,,no misclassified sample found
+color,Tomato___healthy,correct,selected,Tomato___healthy/28e62e2d-8aba-48df-9eff-3d70a5b7775d___RS_HL 9870.JPG,Tomato___healthy,0.9917,color/correct_samples/correct_tomato___healthy.png,
+color,Tomato___healthy,incorrect,missing,,,,,no misclassified sample found

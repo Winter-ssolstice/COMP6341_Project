@@ -1,0 +1,108 @@
+{
+  "selection_rule": {
+    "primary_metric": "val_macro_f1",
+    "tie_breakers": [
+      "val_top1_accuracy",
+      "val_loss (lower is better)",
+      "test_macro_f1",
+      "test_top1_accuracy"
+    ]
+  },
+  "base_dataset_version": "color",
+  "best_model": {
+    "dataset_version": "color",
+    "model_name": "efficientnet_b3",
+    "strategy": "full_finetune",
+    "pretrained": true,
+    "epochs": 15,
+    "epochs_recorded": 10,
+    "batch_size": 32,
+    "num_workers": 4,
+    "val_loss": 0.05195160782853104,
+    "val_top1_accuracy": 0.9953959484346224,
+    "val_macro_f1": 0.9927720427513123,
+    "test_loss": null,
+    "test_top1_accuracy": null,
+    "test_macro_f1": null,
+    "output_dir": "outputs\\part2\\color_efficientnet_b3_full_finetune"
+  },
+  "ranked_candidates": [
+    {
+      "dataset_version": "color",
+      "model_name": "efficientnet_b3",
+      "strategy": "full_finetune",
+      "pretrained": true,
+      "epochs": 15,
+      "epochs_recorded": 10,
+      "batch_size": 32,
+      "num_workers": 4,
+      "val_loss": 0.05195160782853104,
+      "val_top1_accuracy": 0.9953959484346224,
+      "val_macro_f1": 0.9927720427513123,
+      "test_loss": null,
+      "test_top1_accuracy": null,
+      "test_macro_f1": null,
+      "output_dir": "outputs\\part2\\color_efficientnet_b3_full_finetune"
+    },
+    {
+      "dataset_version": "color",
+      "model_name": "vit_small",
+      "strategy": "full_finetune",
+      "pretrained": true,
+      "epochs": 15,
+      "epochs_recorded": 15,
+      "batch_size": 32,
+      "num_workers": 4,
+      "val_loss": 0.04000405308414889,
+      "val_top1_accuracy": 0.9930018416206261,
+      "val_macro_f1": 0.9889400601387024,
+      "test_loss": 0.03909343479143237,
+      "test_top1_accuracy": 0.9933713864849936,
+      "test_macro_f1": 0.9908979535102844,
+      "output_dir": "outputs\\part2\\color_vit_small_full_finetune"
+    },
+    {
+      "dataset_version": "color",
+      "model_name": "efficientnet_b3",
+      "strategy": "linear_probing",
+      "pretrained": true,
+      "epochs": 15,
+      "epochs_recorded": 15,
+      "batch_size": 32,
+      "num_workers": 4,
+      "val_loss": 414.5100258243018,
+      "val_top1_accuracy": 0.6731123390777335,
+      "val_macro_f1": 0.5800523161888123,
+      "test_loss": 376.3938121195108,
+      "test_top1_accuracy": 0.6740931688235667,
+      "test_macro_f1": 0.5850310325622559,
+      "output_dir": "outputs\\part2\\color_efficientnet_b3_linear_probing"
+    },
+    {
+      "dataset_version": "color",
+      "model_name": "resnet50",
+      "strategy": "from_scratch",
+      "pretrained": false,
+      "epochs": 15,
+      "epochs_recorded": 1,
+      "batch_size": 3,
+      "num_workers": 4,
+      "val_loss": 2.33508762300776,
+      "val_top1_accuracy": 0.48103131882393557,
+      "val_macro_f1": 0.356391578912735,
+      "test_loss": null,
+      "test_top1_accuracy": null,
+      "test_macro_f1": null,
+      "output_dir": "outputs\\part2\\color_resnet50_from_scratch"
+    }
+  ],
+  "ablation_commands": {
+    "color": "python .\\train_part2.py --dataset-version color --model efficientnet_b3 --strategy full_finetune --epochs 15 --batch-size 32 --num-workers 4 --pretrained",
+    "grayscale": "python .\\train_part2.py --dataset-version grayscale --model efficientnet_b3 --strategy full_finetune --epochs 15 --batch-size 32 --num-workers 4 --pretrained",
+    "background-segmented": "python .\\train_part2.py --dataset-version background-segmented --model efficientnet_b3 --strategy full_finetune --epochs 15 --batch-size 32 --num-workers 4 --pretrained"
+  },
+  "artifacts": {
+    "ranking_csv": "outputs\\part2\\best_model_ranking.csv",
+    "summary_json": "outputs\\part2\\best_model_summary.json"
+  }
+}
