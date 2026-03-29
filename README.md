@@ -17,9 +17,40 @@ COMP6341_Project/
   outputs/
     part1/
       baseline_resnet18/
+        best.pt
+        checkpoint_epoch_<n>.pt
+        history.json
+        last.pt
+        loss_curve.png
+        run_config.json
+        split_manifest.json
+        test_metrics.json
+        train.log
     part2/
       <dataset>_<model>_<strategy>/
+        best.pt
+        checkpoint_epoch_<n>.pt
+        history.json
+        last.pt
+        loss_curve.png
+        run_config.json
+        split_manifest.json
+        test_metrics.json
+        train.log
+      best_model_ranking.csv
+      best_model_summary.json
       comparison_results.csv
+      experiment_runs.csv
+    part3/
+      vit_small_full_finetune/
+        <dataset_version>/
+          correct_samples/
+          incorrect_samples/
+          metrics.json
+          predictions.csv
+          representative_samples.csv
+        comparisons/
+      analysis.md
   src/plantvillage/
     data.py
     training.py
@@ -44,7 +75,7 @@ Input/
   segmented/
 ```
 
-This matches the local repository structure already present in this workspace.
+This matches the local repository structure already present in this workspace. This dataset can be downloaded from https://www.kaggle.com/datasets/abdallahalidev/plantvillage-dataset.
 
 ## Install
 
@@ -75,7 +106,7 @@ Recommended for stronger Part 1 results on a typical Windows workstation with an
 If you hit out-of-memory errors, reduce `batch-size` first.
 
 ```powershell
-python .\train_baseline.py --data-dir .\Input\color --output-dir .\outputs\part1\baseline_resnet18 --model resnet18 --epochs 20 --batch-size 32 --num-workers 4
+python .\train_baseline.py --data-dir .\Input\color --output-dir .\outputs\part1\baseline_resnet18 --model resnet18 --epochs 10 --batch-size 32 --num-workers 4
 ```
 
 ### Part 1 outputs
@@ -95,7 +126,6 @@ Each Part 1 run writes:
 - `best.pt`: checkpoint with the lowest validation loss
 - `last.pt`: latest checkpoint
 - `checkpoint_epoch_<n>.pt`: periodic epoch checkpoints
-- `test_metrics.json`: final test set metrics
 
 ## Part 2
 
@@ -132,13 +162,13 @@ If you hit out-of-memory errors, reduce `batch-size` before reducing `epochs`.
 
 ```powershell
 # ResNet-50 from scratch baseline
-python .\train_part2.py --dataset-version color --model resnet50 --strategy from_scratch --epochs 30 --batch-size 32 --num-workers 4
+python .\train_part2.py --dataset-version color --model resnet50 --strategy from_scratch --epochs 15 --batch-size 32 --num-workers 4
 
 # EfficientNet-B3 linear probing
-python .\train_part2.py --dataset-version color --model efficientnet_b3 --strategy linear_probing --epochs 15 --batch-size 16 --num-workers 4
+python .\train_part2.py --dataset-version color --model efficientnet_b3 --strategy linear_probing --epochs 15 --batch-size 32 --num-workers 4
 
 # EfficientNet-B3 full fine-tuning
-python .\train_part2.py --dataset-version color --model efficientnet_b3 --strategy full_finetune --epochs 20 --batch-size 16 --num-workers 4
+python .\train_part2.py --dataset-version color --model efficientnet_b3 --strategy full_finetune --epochs 15 --batch-size 32 --num-workers 4
 
 # ViT-Small full fine-tuning
 python .\train_part2.py --dataset-version color --model vit_small --strategy full_finetune --epochs 20 --batch-size 16 --num-workers 4
