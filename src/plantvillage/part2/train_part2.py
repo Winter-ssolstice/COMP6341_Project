@@ -77,13 +77,14 @@ def main() -> None:
     output_dir = resolve_output_dir(args)
     output_dir.mkdir(parents=True, exist_ok=True)
 
+    mixup_alpha = 0.0 if args.strategy == "linear_probing" else args.mixup_alpha
     data_config = DataConfig(
         data_dir=data_dir,
         image_size=args.image_size,
         batch_size=args.batch_size,
         num_workers=args.num_workers,
         seed=args.seed,
-        mixup_alpha=args.mixup_alpha,
+        mixup_alpha=mixup_alpha,
     )
     loaders = create_dataloaders(data_config, split_manifest_path=output_dir / "split_manifest.json")
     metadata = loaders["metadata"]

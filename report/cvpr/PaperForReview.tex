@@ -69,7 +69,7 @@ Concordia University\\
 \maketitle
 
 \begin{abstract}
-Accurate plant disease recognition from leaf images is important for precision agriculture and early crop intervention. In this project, we study image-based plant disease classification on the PlantVillage dataset, which contains 54,305 images across 38 classes and 14 plant species. We compare transfer learning strategies and model families, including ResNet-50 trained from scratch, EfficientNet-B3 with linear probing and full fine-tuning, and ViT-Small with full fine-tuning. We also analyze the effect of input modality using color, grayscale, and background-segmented images. Our results show that transfer learning is essential for this task: full fine-tuning of pretrained models greatly outperforms both linear probing and from-scratch training. EfficientNet-B3 achieves the best validation Macro-F1 of 99.28\% on color images, while ViT-Small achieves 99.34\% test accuracy and 99.09\% test Macro-F1 among the fully evaluated runs. An input-modality ablation further shows that color is a critical diagnostic cue, whereas background removal provides only marginal benefit. Finally, GradCAM and GradCAM++ visualizations indicate that the model generally attends to lesion-bearing regions, with remaining errors concentrated in visually similar disease classes.
+Accurate plant disease recognition from leaf images is important for precision agriculture and early crop intervention. In this project, we study image-based plant disease classification on the PlantVillage dataset, which contains 54,305 images across 38 classes and 14 plant species. We compare transfer learning strategies and model families, including ResNet-50 trained from scratch, EfficientNet-B3 with linear probing and full fine-tuning, and ViT-Small with full fine-tuning. We also analyze the effect of input modality using color, grayscale, and background-segmented images. Our results show that pretrained models adapted end-to-end yield the strongest overall performance: EfficientNet-B3 achieves the best validation Macro-F1 of 99.54\% and the best test Macro-F1 of 99.75\% on color images. A ViT-Small pipeline is then used for modality ablation and GradCAM analysis, which further show that color is a critical diagnostic cue, whereas background removal provides only marginal benefit. Finally, GradCAM and GradCAM++ visualizations indicate that the model generally attends to lesion-bearing regions, with remaining errors concentrated in visually similar disease classes.
 \end{abstract}
 
 \section{Introduction}
@@ -87,13 +87,9 @@ This project was conducted solely for COMP6341 and is not combined with any othe
 
 \section{Related Work}
 
-PlantVillage has become a standard benchmark for plant disease classification since the dataset was introduced by Hughes and Salath\'e~\cite{hughes2015open}. Early work on this benchmark and related tasks mainly relied on convolutional neural networks and transfer learning from ImageNet-pretrained models. More recently, transformer-based architectures have shown strong performance on image recognition by capturing longer-range dependencies and richer global representations~\cite{dosovitskiy2021vit,tan2019efficientnet,he2016resnet}.
+PlantVillage has become a standard benchmark for plant disease classification since its introduction by Hughes and Salath\'e~\cite{hughes2015open}. Early work on this benchmark relied on convolutional neural networks with transfer learning from ImageNet, leveraging pretrained representations for improved data efficiency and feature quality. More recently, transformer-based architectures~\cite{dosovitskiy2021vit} and efficient scaling strategies~\cite{tan2019efficientnet,he2016resnet} have further advanced image recognition by capturing longer-range dependencies and richer global representations.
 
-Explainability is also important in vision-based diagnosis. Gradient-based localization methods such as GradCAM~\cite{selvaraju2017grad} and GradCAM++~\cite{chattopadhay2018gradcampp} provide a way to visualize which image regions contribute most strongly to a prediction, helping assess whether a model focuses on disease-relevant evidence. In practical agricultural applications, this is especially useful because high classification accuracy alone may not be sufficient for user trust; growers and researchers often want visual evidence that the model responds to lesion regions rather than spurious background cues or dataset-specific artifacts.
-
-
-
-Beyond PlantVillage, CNN-based approaches have been widely adopted for plant disease recognition because they can capture local textures and lesion morphology directly from leaf images. In practical deployments, transfer learning is often preferred since pretrained visual representations provide a strong initialization and improve data efficiency. In addition, explainability has become increasingly important in visual diagnosis tasks: high accuracy alone is not always sufficient without evidence that a model attends to semantically meaningful regions. GradCAM-style methods provide a simple and widely used mechanism for this purpose by highlighting image areas that most influence the predicted class.
+Beyond classification accuracy, explainability has become increasingly important in visual diagnosis tasks: growers and researchers often want evidence that a model responds to lesion regions rather than spurious background cues or dataset-specific artifacts. Gradient-based localization methods such as GradCAM~\cite{selvaraju2017grad} and GradCAM++~\cite{chattopadhay2018gradcampp} provide a widely used mechanism for this purpose by highlighting image areas that most influence the predicted class.
 
 \section{Approach}
 
@@ -101,9 +97,9 @@ Beyond PlantVillage, CNN-based approaches have been widely adopted for plant dis
 
 We use the PlantVillage dataset, which contains 54,305 leaf images from 38 disease/health classes across 14 plant species. Three input versions are considered: \textit{color}, \textit{grayscale}, and \textit{background-segmented}. All images are resized to $224 \times 224$. We use a fixed 80/10/10 split on the original dataset, resulting in 43,444 training, 5,430 validation, and 5,431 test images for the color version. The grayscale version reuses the same image identities. The background-segmented version follows the same source split when segmented counterparts are available; in the aligned evaluation used later, 5,318 of the 5,431 test images have segmented matches.
 
-To improve generalization, we apply data augmentation during training: random horizontal flip, random vertical flip, random resized crop, color jitter, and MixUp. All models are optimized with cross-entropy loss using AdamW and cosine learning-rate scheduling. Model selection is based on validation performance, and the best checkpoint for each experiment is used for final evaluation. This unified protocol ensures that differences across runs mainly reflect model design and transfer-learning strategy rather than inconsistent split construction or evaluation settings.
+To improve generalization, we apply data augmentation during training: random horizontal flip, random vertical flip, random resized crop, color jitter, and MixUp. All models are optimized with cross-entropy loss using AdamW (weight decay $1{\times}10^{-4}$). The baseline uses a learning rate of $1{\times}10^{-3}$; all other experiments use $3{\times}10^{-4}$. Model selection is based on validation performance, and the best checkpoint for each experiment is used for final evaluation. This unified protocol ensures that differences across runs mainly reflect model design and transfer-learning strategy rather than inconsistent split construction or evaluation settings.
 
-All experiments were implemented in PyTorch. Model selection was based on validation performance, and the checkpoint with the best validation result was used for final reporting. Batch size and total training epochs were chosen according to the memory and convergence characteristics of each architecture, while keeping the data split and evaluation metrics fixed across settings.
+All experiments were implemented in PyTorch. Batch size and total training epochs were chosen according to the memory and convergence characteristics of each architecture, while keeping the data split and evaluation metrics fixed across settings.
 
 \subsection{Model Comparison}
 
@@ -150,13 +146,13 @@ To interpret model behavior, we apply GradCAM and GradCAM++ to representative co
 
 \subsection{Baseline}
 
-We first establish a baseline using a pretrained ResNet-18 model fully fine-tuned on the color dataset. This baseline achieves 97.53\% test accuracy and 96.34\% test Macro-F1, showing that standard convolutional transfer learning is already highly effective on PlantVillage.
+We first establish a baseline using a ResNet-18 model trained on the color dataset. This baseline achieves 97.53\% test accuracy and 96.34\% test Macro-F1, showing that a standard convolutional baseline is already highly effective on PlantVillage.
 
 \subsection{Model Comparison}
 
-\Cref{tab:model-selection} summarizes validation-set model selection on the color dataset. The most important pattern is that transfer learning is indispensable: the from-scratch ResNet-50 baseline performs poorly, and linear probing is also far below full fine-tuning. EfficientNet-B3 with full fine-tuning achieves the best validation Macro-F1 (99.28\%), with ViT-Small close behind at 98.89\%. This indicates that generic pretrained features alone are not sufficient; the backbone must be adapted to the target domain.
+\Cref{tab:model-selection} summarizes validation-set model selection on the color dataset. End-to-end adaptation of pretrained models is strongest: EfficientNet-B3 with full fine-tuning achieves the best validation Macro-F1 (99.54\%), with ViT-Small close behind at 98.89\%. The from-scratch ResNet-50 reaches 97.30\% validation Macro-F1, competitive but below the best pretrained configurations. Linear probing remains far weaker (58.01\% Macro-F1), indicating that frozen pretrained features alone are not sufficient for this fine-grained disease classification task. Note that MixUp augmentation is applied uniformly to all training runs; while beneficial for models with learnable feature extractors, it may interact unfavorably with the frozen backbone in the linear probing setting, contributing to the elevated training loss observed for that configuration.
 
-\Cref{tab:test-results} reports held-out test metrics only for runs with exported test evaluations. The pretrained ResNet-18 baseline already performs strongly, and ViT-Small with full fine-tuning reaches 99.34\% test accuracy and 99.09\% test Macro-F1 among the advanced models with complete held-out evaluation. For the later ablation and explainability analysis, we use the ViT-Small pipeline because it produced complete test artifacts and was the model used in our GradCAM workflow.
+\Cref{tab:test-results} reports held-out test metrics. The ResNet-18 baseline already performs strongly, EfficientNet-B3 with full fine-tuning is the top overall model at 99.83\% test accuracy and 99.75\% test Macro-F1, and ViT-Small remains a strong second pretrained model. For the subsequent ablation and explainability analysis, we use the ViT-Small pipeline to keep the modality comparison and GradCAM workflow on a single explainability-ready setup.
 
 \begin{table}[t]
 \centering
@@ -165,10 +161,10 @@ We first establish a baseline using a pretrained ResNet-18 model fully fine-tune
 \toprule
 Model / Strategy & Val. Acc. & Val. Macro-F1 \\
 \midrule
-ResNet-50 from scratch (val) & 48.10 & 35.64 \\
-EffNet-B3 linear probing & 67.31 & 58.01 \\
-EffNet-B3 full fine-tune (val) & 99.54 & 99.28 \\
+EffNet-B3 full fine-tune (val) & 99.72 & 99.54 \\
 ViT-Small full fine-tune & 99.30 & 98.89 \\
+ResNet-50 from scratch (val) & 98.08 & 97.30 \\
+EffNet-B3 linear probing & 67.31 & 58.01 \\
 \bottomrule
 \end{tabular}
 \caption{Validation-set model selection on the color dataset.}
@@ -182,18 +178,37 @@ ViT-Small full fine-tune & 99.30 & 98.89 \\
 \toprule
 Model / Strategy & Test Acc. & Test Macro-F1 \\
 \midrule
+EffNet-B3 full fine-tune & 99.83 & 99.75 \\
+ViT-Small full fine-tune & 99.34 & 99.09 \\
+ResNet-50 from scratch & 97.72 & 97.18 \\
 ResNet-18 baseline & 97.53 & 96.34 \\
 EffNet-B3 linear probing & 67.41 & 58.50 \\
-ViT-Small full fine-tune & 99.34 & 99.09 \\
 \bottomrule
 \end{tabular}
-\caption{Held-out test results for runs with exported test metrics.}
+\caption{Held-out test results across all evaluated configurations.}
 \label{tab:test-results}
 \end{table}
 
 
 
-These results suggest that PlantVillage is not merely an easy benchmark when evaluated under mismatched training strategies. Although pretrained models achieve near-saturated performance, the large gap between full fine-tuning and linear probing indicates that disease recognition still requires substantial domain adaptation. The poor from-scratch performance of ResNet-50 further highlights the importance of strong initialization and data-efficient optimization for fine-grained multi-class recognition.
+\begin{figure}[t]
+    \centering
+    \begin{subfigure}{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{loss_curve_resnet18.png}
+        \caption{ResNet-18 baseline (10 epochs).}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{loss_curve_effnet_b3.png}
+        \caption{EfficientNet-B3 full fine-tune (15 epochs).}
+    \end{subfigure}
+    \caption{Training and validation loss curves. The pretrained EfficientNet-B3 converges faster and to a lower validation loss than the baseline ResNet-18.}
+    \label{fig:loss-curves}
+\end{figure}
+
+These results suggest that PlantVillage is not merely an easy benchmark when evaluated under mismatched training strategies. Although several models achieve near-saturated performance, the large gap between full fine-tuning and linear probing indicates that disease recognition still benefits substantially from domain adaptation. The from-scratch ResNet-50 control is competitive once fully trained, but the best pretrained configurations still achieve the highest validation and test Macro-F1, reinforcing the value of strong initialization and end-to-end adaptation for fine-grained multi-class recognition.
 
 \subsection{Input-Modality Ablation}
 
@@ -202,13 +217,13 @@ These results suggest that PlantVillage is not merely an easy benchmark when eva
 \begin{table}[t]
 \centering
 \small
-\begin{tabular}{lcc}
+\begin{tabular}{lccc}
 \toprule
-Input Version & Test Acc. & Test Macro-F1 \\
+Input Version & Test Acc. & Test Macro-F1 & $\Delta$Acc \\
 \midrule
-Color & 99.34 & 99.09 \\
-Grayscale & 95.86 & 94.46 \\
-Background-segmented & 99.25 & 99.09 \\
+Color & 99.34 & 99.09 & --- \\
+Grayscale & 95.86 & 94.46 & $-$3.48 \\
+Background-segmented & 99.25 & 99.09 & $-$0.09 \\
 \bottomrule
 \end{tabular}
 \caption{Input-modality ablation using the selected ViT-Small evaluation pipeline. The background-segmented row is computed on the 5,318 matched test images available after segmentation.}
@@ -224,11 +239,29 @@ Even with the matched-subset caveat, the small gap between the color and backgro
 
 As shown in \Cref{fig:gradcam-results}, GradCAM and GradCAM++ visualizations indicate that the model generally attends to lesion-bearing regions for correct predictions rather than irrelevant image areas. In the correctly classified tomato example, the highlighted regions broadly align with visible disease patterns, supporting the plausibility of the learned decision process.
 
+\Cref{tab:hardest-classes} lists the hardest class for each input modality. The \textit{Potato / Healthy} class is consistently the most difficult, likely due to low test-set support (14 samples) and visual similarity to \textit{Soybean / Healthy}. The most frequent confusion pairs are: \textit{Peach / Bacterial Spot} $\rightarrow$ \textit{Tomato / Septoria Leaf Spot} (5 errors, color); \textit{Tomato / Spider Mites} $\rightarrow$ \textit{Tomato / Healthy} (21 errors, grayscale); and \textit{Tomato / Early Blight} $\rightarrow$ \textit{Tomato / Bacterial Spot} (7 errors, background-segmented).
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{llcc}
+\toprule
+Input & Hardest Class & Support & Recall \\
+\midrule
+Color & Potato / Healthy & 14 & 78.6\% \\
+Bg.-segmented & Tomato / Early Blight & 114 & 91.2\% \\
+Grayscale & Potato / Healthy & 14 & 57.1\% \\
+\bottomrule
+\end{tabular}
+\caption{Hardest class (lowest per-class recall) for each input modality.}
+\label{tab:hardest-classes}
+\end{table}
+
 For incorrect predictions, the attention becomes less discriminative and more diffuse, often spreading across larger leaf regions without isolating the most diagnostic symptoms. This behavior is consistent with our error analysis, where visually similar disease classes remain the most challenging. In grayscale, the failure modes become more severe, especially for tomato diseases such as \textit{Early blight}, \textit{Target Spot}, and \textit{Spider mites}, further confirming that color is an important discriminative cue. An additional observation from \Cref{fig:gradcam-results} is that the segmented inputs produce attention maps that are visually similar to those of the color inputs, which aligns with the quantitative ablation where background removal yields only marginal changes. Therefore, the primary remaining challenge is class ambiguity among diseases with similar visual symptoms rather than background clutter. From a practical perspective, this also suggests that future improvements are more likely to come from better fine-grained representation learning or harder example mining than from further preprocessing of the already-clean PlantVillage backgrounds. Another implication is that explainability can help distinguish between meaningful confidence and accidental shortcut behavior. When the heatmaps align with lesion structure, the prediction is easier to trust; when the response is broad or unstable, the model output should be treated more cautiously. This type of qualitative inspection is especially valuable in agricultural applications, where deployment decisions may depend not only on top-line accuracy but also on whether the model behaves consistently across disease presentations.
 
 \section{Conclusion}
 
-We presented a systematic study of plant disease recognition on PlantVillage using transfer learning, modality ablation, and explainability analysis. Our experiments show that full fine-tuning of pretrained models clearly outperforms both linear probing and from-scratch training. EfficientNet-B3 achieved the best validation Macro-F1 on the color dataset, while ViT-Small achieved 99.34\% test accuracy and 99.09\% test Macro-F1 among the fully evaluated runs. The modality ablation demonstrated that color is a critical signal, whereas background removal provides only marginal benefit. Finally, GradCAM-based analysis showed that the model usually focuses on lesion-relevant regions, with errors concentrated in visually similar disease categories. Taken together, these findings suggest that PlantVillage is best viewed not simply as an easy benchmark but as a useful testbed for understanding how transfer learning, visual modality, and interpretability interact in fine-grained agricultural recognition. Future work could explore class-balanced optimization, stronger augmentation for confusing classes, and evaluation on less curated real-world datasets with more realistic lighting, occlusion, and background variation. More broadly, our results highlight that even when overall accuracy is already very high, careful comparison of training strategy and input representation still reveals meaningful differences in model behavior. This makes the benchmark a useful educational setting for studying both performance and reliability in computer vision systems.
+We presented a systematic study of plant disease recognition on PlantVillage using transfer learning, modality ablation, and explainability analysis. Our experiments show that full fine-tuning of pretrained models provides the best overall results, with EfficientNet-B3 achieving the top validation and test Macro-F1 on the color dataset. The ViT-Small pipeline remains strong and serves as the basis for the modality ablation and GradCAM analysis. The ablation demonstrated that color is a critical signal, whereas background removal provides only marginal benefit. Finally, GradCAM-based analysis showed that the model usually focuses on lesion-relevant regions, with errors concentrated in visually similar disease categories. Taken together, these findings suggest that PlantVillage is best viewed not simply as an easy benchmark but as a useful testbed for understanding how transfer learning, visual modality, and interpretability interact in fine-grained agricultural recognition. Future work could explore class-balanced optimization, stronger augmentation for confusing classes, and evaluation on less curated real-world datasets with more realistic lighting, occlusion, and background variation. More broadly, our results highlight that even when overall accuracy is already very high, careful comparison of training strategy and input representation still reveals meaningful differences in model behavior. This makes the benchmark a useful educational setting for studying both performance and reliability in computer vision systems.
 
 {\small
 \bibliographystyle{ieee_fullname}
