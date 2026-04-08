@@ -1,8 +1,8 @@
-"""Reusable PlantVillage data and training utilities."""
+"""Reusable PlantVillage utilities shared across COMP6341 project parts."""
 
-from .data import DataConfig, MixUpCollator, create_dataloaders
-from .models import ModelConfig, build_model
-from .training import TrainingConfig, train_model
+from .common.data import DataConfig, MixUpCollator, create_dataloaders
+from .common.models import ModelConfig, build_model
+from .common.training import TrainingConfig, train_model
 
 __all__ = [
     "DataConfig",

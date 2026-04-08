@@ -1,5 +1,5 @@
 dataset_version,model_name,strategy,pretrained,val_loss,val_top1_accuracy,val_macro_f1,test_loss,test_top1_accuracy,test_macro_f1,output_dir
-background_segmented,vit_small,full_finetune,True,0.03724434391267831,0.9883977902308793,0.9853659272193909,0.04990612511387279,0.9861929307805597,0.9811904430389404,outputs\part2\background_segmented_vit_small_full_finetune
+background_segmented,vit_small,full_finetune,True,,,,0.030103283634128404,0.9924783753290711,0.9908793568611145,outputs\part3\vit_small_full_finetune\background_segmented
 color,efficientnet_b3,full_finetune,True,0.05195160782853104,0.9953959484346224,0.9927720427513123,,,,outputs\part2\color_efficientnet_b3_full_finetune
 color,efficientnet_b3,linear_probing,True,414.5100258243018,0.6731123390777335,0.5800523161888123,376.3938121195108,0.6740931688235667,0.5850310325622559,outputs\part2\color_efficientnet_b3_linear_probing
 color,resnet50,from_scratch,False,2.33508762300776,0.48103131882393557,0.356391578912735,,,,outputs\part2\color_resnet50_from_scratch

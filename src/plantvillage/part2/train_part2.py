@@ -7,10 +7,10 @@ from pathlib import Path
 
 import torch
 
-from src.plantvillage.data import DataConfig, create_dataloaders
-from src.plantvillage.models import ModelConfig, build_model, resolve_pretrained_default
-from src.plantvillage.results import write_experiment_summary
-from src.plantvillage.training import TrainingConfig, evaluate_model, train_model
+from ..common.data import DataConfig, create_dataloaders
+from ..common.models import ModelConfig, build_model, resolve_pretrained_default
+from ..common.results import write_experiment_summary
+from ..common.training import TrainingConfig, evaluate_model, train_model
 
 DATASET_VERSION_TO_DIR = {
     "color": "Input/color",

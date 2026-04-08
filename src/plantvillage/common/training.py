@@ -7,7 +7,6 @@ from pathlib import Path
 import time
 from typing import Any
 
-import matplotlib.pyplot as plt
 import torch
 from torch import nn
 
@@ -96,6 +95,8 @@ def _save_history(output_dir: Path, history: list[dict[str, float]]) -> None:
 
 
 def _plot_loss_curves(output_dir: Path, history: list[dict[str, float]]) -> None:
+    import matplotlib.pyplot as plt
+
     epochs = [entry["epoch"] for entry in history]
     train_loss = [entry["train_loss"] for entry in history]
     val_loss = [entry["val_loss"] for entry in history]

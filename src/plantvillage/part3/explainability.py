@@ -8,7 +8,6 @@ import math
 from pathlib import Path
 from typing import Any
 
-import matplotlib.pyplot as plt
 import numpy as np
 from PIL import Image
 import torch
@@ -16,8 +15,8 @@ import torch.nn.functional as F
 from torch.utils.data import DataLoader, Dataset
 from torchvision import datasets, transforms
 
-from src.plantvillage.data import IMAGENET_MEAN, IMAGENET_STD, build_eval_transform
-from src.plantvillage.models import ModelConfig, build_model, get_default_device
+from ..common.data import IMAGENET_MEAN, IMAGENET_STD, build_eval_transform
+from ..common.models import ModelConfig, build_model, get_default_device
 
 
 @dataclass(slots=True)
@@ -422,6 +421,8 @@ def _save_representative_figure(
     sample_type: str,
     output_path: str | Path,
 ) -> None:
+    import matplotlib.pyplot as plt
+
     output_path = Path(output_path)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     rgb_image, gradcam_overlay, gradcampp_overlay = _get_cam_visuals(context, record.image_path, record.pred_idx)
@@ -579,6 +580,8 @@ def generate_comparison_figures(
     segmented_analysis: DatasetAnalysis,
     output_dir: str | Path,
 ) -> dict[str, int]:
+    import matplotlib.pyplot as plt
+
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 

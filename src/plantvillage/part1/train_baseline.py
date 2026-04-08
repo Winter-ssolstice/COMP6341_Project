@@ -8,8 +8,8 @@ from pathlib import Path
 import torch
 from torchvision import models
 
-from src.plantvillage.data import DataConfig, create_dataloaders
-from src.plantvillage.training import TrainingConfig, evaluate_model, train_model
+from ..common.data import DataConfig, create_dataloaders
+from ..common.training import TrainingConfig, evaluate_model, train_model
 
 
 def parse_args() -> argparse.Namespace:

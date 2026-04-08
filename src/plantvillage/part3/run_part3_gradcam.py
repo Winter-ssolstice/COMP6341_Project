@@ -3,7 +3,7 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from src.plantvillage.explainability import (
+from .explainability import (
     analyze_run,
     generate_comparison_figures,
     load_run_context,

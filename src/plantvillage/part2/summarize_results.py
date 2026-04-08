@@ -4,7 +4,7 @@ import argparse
 import csv
 from pathlib import Path
 
-from src.plantvillage.results import collect_completed_part2_runs
+from ..common.results import collect_completed_part2_runs
 
 
 def parse_args() -> argparse.Namespace:

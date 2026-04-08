@@ -22,7 +22,7 @@ This work addresses three research questions: (1) How does training strategy (fr
 
 ## 2. Dataset and Preprocessing
 
-**PlantVillage** contains 54,305 images organized into 38 disease/health classes. Three input modalities are provided: *color* (RGB), *grayscale*, and *background-segmented* (green background removed). All images are resized to 224×224. The dataset is split deterministically with a fixed seed (80% train / 10% val / 10% test), yielding 43,444 / 5,430 / 5,431 samples respectively. The same split manifest is reused across all experiments for fair comparison.
+**PlantVillage** contains 54,305 images organized into 38 disease/health classes. Three input modalities are provided: *color* (RGB), *grayscale*, and *background-segmented* (green background removed). All images are resized to 224×224. The dataset is split deterministically with a fixed seed (80% train / 10% val / 10% test), yielding 43,444 / 5,430 / 5,431 samples for the original color version. The grayscale version reuses the same image identities, while the background-segmented evaluation is reported on the matched subset where segmented counterparts are available.
 
 **Data augmentation** (training only): `RandomHorizontalFlip`, `RandomVerticalFlip`, `RandomResizedCrop(224)`, `ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.1)`, and MixUp (α = 0.4).
 
@@ -45,7 +45,7 @@ All models use **AdamW** (lr = 1×10⁻³, weight decay = 1×10⁻⁴), cross-en
 
 ### 3.2 GradCAM Explainability
 
-For Part 3, the ViT-Small full fine-tuning model is selected as the analysis target. **GradCAM** [Selvaraju et al., 2017] and **GradCAM++** [Chattopadhay et al., 2018] are applied to the final attention block. For each of the 38 classes, one representative *correct* and one *incorrect* prediction are identified from the test set. The three dataset versions (color, grayscale, background-segmented) are aligned to the same color test split for a fair cross-modality comparison.
+For Part 3, the ViT-Small full fine-tuning model is selected as the analysis target. **GradCAM** [Selvaraju et al., 2017] and **GradCAM++** [Chattopadhay et al., 2018] are applied to the final attention block. For each of the 38 classes, one representative *correct* and one *incorrect* prediction are identified from the test set. The three dataset versions are aligned to the color reference split where corresponding images are available, enabling a near-matched cross-modality comparison.
 
 ---
 
@@ -57,7 +57,7 @@ A standard ResNet-18 pretrained on ImageNet is fully fine-tuned for 10 epochs (b
 
 <div align="center">
 
-![Part 1 Loss Curve](outputs/part1/baseline_resnet18/loss_curve.png)
+![Part 1 Loss Curve](../outputs/part1/baseline_resnet18/loss_curve.png)
 
 *Figure 1: Training and validation loss for the ResNet-18 baseline (10 epochs). Validation loss converges to ~0.22, consistent with the 97.53% test accuracy.*
 
@@ -67,22 +67,32 @@ A standard ResNet-18 pretrained on ImageNet is fully fine-tuned for 10 epochs (b
 
 ### 4.2 Part 2: Model Comparison
 
-Table 1 reports validation metrics for all four color-dataset experiments. Full fine-tuning of pretrained models substantially outperforms both linear probing and from-scratch training.
+Table 1 reports validation-set model selection on the color dataset. Full fine-tuning of pretrained models substantially outperforms both linear probing and from-scratch training.
 
 **Table 1: Model comparison on the color dataset (validation set).**
 
-| Model | Strategy | Val Acc | Val Macro F1 | Test Acc | Test Macro F1 |
-|---|---|---|---|---|---|
-| EfficientNet-B3 | Full Fine-tune | **99.54%** | **99.28%** | — | — |
-| ViT-Small | Full Fine-tune | 99.30% | 98.89% | 99.34% | 99.09% |
-| EfficientNet-B3 | Linear Probing | 67.31% | 58.01% | 67.41% | 58.50% |
-| ResNet-50 | From Scratch | 48.10% | 35.64% | — | — |
+| Model | Strategy | Val Acc | Val Macro F1 |
+|---|---|---|---|
+| EfficientNet-B3 | Full Fine-tune | **99.54%** | **99.28%** |
+| ViT-Small | Full Fine-tune | 99.30% | 98.89% |
+| EfficientNet-B3 | Linear Probing | 67.31% | 58.01% |
+| ResNet-50 | From Scratch | 48.10% | 35.64% |
 
-EfficientNet-B3 (full fine-tune) ranks first on validation Macro F1 (99.28%). ViT-Small is selected for the ablation study and Part 3 analysis given its complete test metrics and architectural interpretability.
+EfficientNet-B3 (full fine-tune) ranks first on validation Macro F1 (99.28%), with ViT-Small close behind. This confirms that transfer learning is essential and that full fine-tuning is far more effective than linear probing or training from scratch.
+
+Table 2 reports held-out test metrics only for runs with exported test evaluations. ViT-Small is selected for the ablation study and Part 3 analysis because it produced complete test artifacts and was the model used in the GradCAM workflow.
+
+**Table 2: Held-out test results for runs with exported test metrics.**
+
+| Model | Strategy | Test Acc | Test Macro F1 |
+|---|---|---|---|
+| ResNet-18 | Baseline | 97.53% | 96.34% |
+| EfficientNet-B3 | Linear Probing | 67.41% | 58.50% |
+| ViT-Small | Full Fine-tune | **99.34%** | **99.09%** |
 
 <div align="center">
 
-![ViT-Small Loss Curve](outputs/part2/color_vit_small_full_finetune/loss_curve.png)
+![ViT-Small Loss Curve](../outputs/part2/color_vit_small_full_finetune/loss_curve.png)
 
 *Figure 2: Training and validation loss for ViT-Small full fine-tuning (15 epochs, color). Validation loss reaches ~0.04, indicating rapid and stable convergence enabled by ImageNet pretraining.*
 
@@ -92,17 +102,17 @@ EfficientNet-B3 (full fine-tune) ranks first on validation Macro F1 (99.28%). Vi
 
 ### 4.3 Ablation: Input Modality
 
-Using ViT-Small (full fine-tune) as the fixed architecture, we compare performance across the three PlantVillage modalities on the held-out test set.
+Using ViT-Small (full fine-tune) as the fixed architecture, we compare performance across the three PlantVillage modalities. The color and grayscale rows use the original held-out test split, while the background-segmented row is reported on the matched subset where segmented counterparts are available.
 
-**Table 2: Ablation study — ViT-Small across dataset versions (test set).**
+**Table 3: Ablation study — ViT-Small across dataset versions.**
 
 | Dataset Version | Test Accuracy | Test Macro F1 | ΔAcc vs. Color |
 |---|---|---|---|
 | Color | **99.34%** | **99.09%** | — |
-| Background Segmented | 98.62% | 98.12% | −0.72% |
+| Background Segmented | 99.25% | 99.09% | −0.09% |
 | Grayscale | 95.86% | 94.46% | −3.48% |
 
-Removing color information (grayscale) causes a **−3.48% accuracy drop**, the largest degradation observed. This confirms that chromatic texture is a primary diagnostic cue for diseases such as rust, mold, and yellowing. Background segmentation produces a minor **−0.72% drop**, suggesting the model is inherently robust to background clutter.
+Removing color information (grayscale) causes a **−3.48% accuracy drop**, the largest degradation observed. This confirms that chromatic texture is a primary diagnostic cue for diseases such as rust, mold, and yellowing. Background segmentation produces only a **−0.09% drop** on the matched subset used for comparison, suggesting the model is inherently robust to background clutter, but this number should be interpreted as a near-matched comparison rather than a perfectly identical test-set evaluation.
 
 ### 4.4 Part 3: GradCAM Analysis
 
@@ -110,7 +120,7 @@ Removing color information (grayscale) causes a **−3.48% accuracy drop**, the 
 
 <div align="center">
 
-![GradCAM Correct](outputs/part3/vit_small_full_finetune/color/correct_samples/correct_tomato___early_blight.png)
+![GradCAM Correct](../outputs/part3/vit_small_full_finetune/color/correct_samples/correct_tomato___early_blight.png)
 
 *Figure 3: GradCAM visualization for a correctly classified Tomato Early Blight sample (color, conf = 0.994). Left: original image; center: GradCAM overlay; right: GradCAM++ overlay. Activation concentrates on lesion regions.*
 
@@ -120,13 +130,13 @@ Removing color information (grayscale) causes a **−3.48% accuracy drop**, the 
 
 <div align="center">
 
-![GradCAM Incorrect](outputs/part3/vit_small_full_finetune/color/incorrect_samples/incorrect_corn__maize____cercospora_leaf_spot_gray_leaf_spot.png)
+![GradCAM Incorrect](../outputs/part3/vit_small_full_finetune/color/incorrect_samples/incorrect_corn__maize____cercospora_leaf_spot_gray_leaf_spot.png)
 
 *Figure 4: GradCAM for a misclassified Corn Cercospora Leaf Spot sample (color, conf = 0.754, predicted: Northern Leaf Blight). Attention is diffuse, indicating the model is uncertain about the discriminative region.*
 
 </div>
 
-**Table 3: Hardest classes per dataset version (lowest per-class recall).**
+**Table 4: Hardest classes per dataset version (lowest per-class recall).**
 
 | Dataset | Class | Support | Recall |
 |---|---|---|---|

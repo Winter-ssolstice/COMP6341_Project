@@ -1,17 +1,17 @@
 {
   "training": {
-    "output_dir": "outputs\\part1\\baseline_resnet18",
+    "output_dir": "outputs/part1/baseline_resnet18",
     "epochs": 10,
     "learning_rate": 0.001,
     "weight_decay": 0.0001,
     "checkpoint_every": 1,
-    "device": "cuda",
+    "device": "mps",
     "log_interval": 20,
     "max_train_steps": null,
     "max_val_steps": null
   },
   "data": {
-    "data_dir": "Input/color",
+    "data_dir": "./Input/color",
     "image_size": 224,
     "batch_size": 32,
     "num_workers": 4,
@@ -19,7 +19,7 @@
     "val_ratio": 0.1,
     "seed": 42,
     "mixup_alpha": 0.4,
-    "pin_memory": true,
+    "pin_memory": false,
     "persistent_workers": true,
     "class_names": [
       "Apple___Apple_scab",

@@ -5,7 +5,7 @@ import csv
 import json
 from pathlib import Path
 
-from src.plantvillage.results import collect_completed_part2_runs
+from ..common.results import collect_completed_part2_runs
 
 DEFAULT_CANDIDATES = [
     ("resnet50", "from_scratch"),
@@ -42,7 +42,7 @@ def sort_key(row: dict[str, object]) -> tuple[float, float, float, float, float]
 def build_ablation_command(best_row: dict[str, object], dataset_version: str) -> str:
     pretrained_flag = "--pretrained" if best_row["pretrained"] else "--no-pretrained"
     return (
-        "python .\\train_part2.py "
+        "python -m src.plantvillage.part2.train_part2 "
         f"--dataset-version {dataset_version} "
         f"--model {best_row['model_name']} "
         f"--strategy {best_row['strategy']} "

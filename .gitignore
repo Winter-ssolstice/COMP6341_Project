@@ -201,6 +201,7 @@ cython_debug/
 
 # Project-local data, artifacts, and IDE state
 .idea/
+.DS_Store
 Input/
 outputs/**/*.pt
 .cursorignore
