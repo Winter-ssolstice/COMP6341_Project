@@ -15,6 +15,7 @@
 \usepackage{amssymb}
 \usepackage{booktabs}
 \usepackage{subcaption}
+\usepackage{enumitem}
 
 
 % It is strongly recommended to use hyperref, especially for the review version.
@@ -27,6 +28,14 @@
 % (Or just hit 'q' on the first LaTeX run, let it finish, and you
 %  should be clear).
 \usepackage[pagebackref,breaklinks,colorlinks]{hyperref}
+
+% Slight spacing adjustments to keep the paper within 4 pages
+\setlength{\textfloatsep}{8pt plus 1pt minus 2pt}
+\setlength{\floatsep}{6pt plus 1pt minus 2pt}
+\setlength{\intextsep}{8pt plus 1pt minus 2pt}
+\setlength{\abovecaptionskip}{3pt}
+\setlength{\belowcaptionskip}{0pt}
+\setlist[itemize]{leftmargin=*,topsep=2pt,itemsep=1pt,parsep=0pt,partopsep=0pt}
 
 
 % Support for easy cross-referencing
@@ -193,20 +202,22 @@ EffNet-B3 linear probing & 67.41 & 58.50 \\
 
 \begin{figure}[t]
     \centering
-    \begin{subfigure}{0.48\linewidth}
+    \begin{subfigure}[t]{0.48\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{loss_curve_resnet18.png}
-        \caption{ResNet-18 baseline (10 epochs).}
+        \includegraphics[width=\linewidth,height=4cm,keepaspectratio]{loss_curve_resnet18.png}
+        \caption{ResNet-18 (10 epochs).}
     \end{subfigure}
     \hfill
-    \begin{subfigure}{0.48\linewidth}
+    \begin{subfigure}[t]{0.48\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{loss_curve_effnet_b3.png}
-        \caption{EfficientNet-B3 full fine-tune (15 epochs).}
+        \includegraphics[width=\linewidth,height=4cm,keepaspectratio]{loss_curve_effnet_b3.png}
+        \caption{EfficientNet-B3 (15 epochs).}
     \end{subfigure}
-    \caption{Training and validation loss curves. The pretrained EfficientNet-B3 converges faster and to a lower validation loss than the baseline ResNet-18.}
+    \caption{Training and validation loss curves.}
     \label{fig:loss-curves}
 \end{figure}
+
+\noindent\textbf{Figure~\ref{fig:loss-curves}} shows that EfficientNet-B3 converges faster and reaches a lower validation loss than the ResNet-18 baseline.
 
 These results suggest that PlantVillage is not merely an easy benchmark when evaluated under mismatched training strategies. Although several models achieve near-saturated performance, the large gap between full fine-tuning and linear probing indicates that disease recognition still benefits substantially from domain adaptation. The from-scratch ResNet-50 control is competitive once fully trained, but the best pretrained configurations still achieve the highest validation and test Macro-F1, reinforcing the value of strong initialization and end-to-end adaptation for fine-grained multi-class recognition.
 
@@ -263,6 +274,7 @@ For incorrect predictions, the attention becomes less discriminative and more di
 
 We presented a systematic study of plant disease recognition on PlantVillage using transfer learning, modality ablation, and explainability analysis. Our experiments show that full fine-tuning of pretrained models provides the best overall results, with EfficientNet-B3 achieving the top validation and test Macro-F1 on the color dataset. The ViT-Small pipeline remains strong and serves as the basis for the modality ablation and GradCAM analysis. The ablation demonstrated that color is a critical signal, whereas background removal provides only marginal benefit. Finally, GradCAM-based analysis showed that the model usually focuses on lesion-relevant regions, with errors concentrated in visually similar disease categories. Taken together, these findings suggest that PlantVillage is best viewed not simply as an easy benchmark but as a useful testbed for understanding how transfer learning, visual modality, and interpretability interact in fine-grained agricultural recognition. Future work could explore class-balanced optimization, stronger augmentation for confusing classes, and evaluation on less curated real-world datasets with more realistic lighting, occlusion, and background variation. More broadly, our results highlight that even when overall accuracy is already very high, careful comparison of training strategy and input representation still reveals meaningful differences in model behavior. This makes the benchmark a useful educational setting for studying both performance and reliability in computer vision systems.
 
+\vspace{-2mm}
 {\small
 \bibliographystyle{ieee_fullname}
 \bibliography{egbib}

@@ -94,9 +94,12 @@ Table 2 reports held-out test metrics across all evaluated configurations. Effic
 
 <div align="center">
 
-![ViT-Small Loss Curve](../outputs/part2/color_vit_small_full_finetune/loss_curve.png)
+| ResNet-18 Baseline | EfficientNet-B3 Full Fine-tune |
+|---|---|
+| ![ResNet-18 Loss Curve](../outputs/part1/baseline_resnet18/loss_curve.png) | ![EfficientNet-B3 Loss Curve](../outputs/part2/color_efficientnet_b3_full_finetune/loss_curve.png) |
+| *Figure 2(a): ResNet-18 (10 epochs).* | *Figure 2(b): EfficientNet-B3 (15 epochs).* |
 
-*Figure 2: Training and validation loss for ViT-Small full fine-tuning (15 epochs, color). Validation loss reaches ~0.04, indicating rapid and stable convergence enabled by ImageNet pretraining.*
+*Figure 2: Training and validation loss curves for the baseline and the best overall model. EfficientNet-B3 converges faster and reaches a lower validation loss than the ResNet-18 baseline.*
 
 </div>
 
