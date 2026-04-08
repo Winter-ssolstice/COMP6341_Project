@@ -93,7 +93,7 @@ Table 2 reports held-out test metrics across all evaluated configurations. Effic
 
 <div align="center">
 
-| ![ResNet-18 Loss Curve](../outputs/part1/baseline_resnet18/loss_curve.png) | ![EfficientNet-B3 Loss Curve](../outputs/part2/color_effnet_b3_full_finetune/loss_curve.png) |
+| ![ResNet-18 Loss Curve](assets/loss_curve_resnet18.png) | ![EfficientNet-B3 Loss Curve](assets/loss_curve_effnet_b3.png) |
 |---|---|
 | *Figure 1(a): ResNet-18 baseline (10 epochs).* | *Figure 1(b): EfficientNet-B3 full fine-tune (15 epochs).* |
 
@@ -125,7 +125,7 @@ Removing color information (grayscale) causes a **−3.48% accuracy drop**, the 
 
 <div align="center">
 
-![GradCAM Correct](../outputs/part3/vit_small_full_finetune/comparisons/correct_tomato___septoria_leaf_spot.png)
+![GradCAM Correct](assets/correct_tomato___septoria_leaf_spot.png)
 
 *Figure 2: GradCAM and GradCAM++ visualization for a representative correct prediction, Tomato / Septoria Leaf Spot. The model attends to lesion-bearing regions, indicating that the prediction is driven by disease-relevant evidence.*
 
@@ -135,7 +135,7 @@ Removing color information (grayscale) causes a **−3.48% accuracy drop**, the 
 
 <div align="center">
 
-![GradCAM Incorrect](../outputs/part3/vit_small_full_finetune/comparisons/incorrect_tomato___spider_mites_two_spotted_spider_mite.png)
+![GradCAM Incorrect](assets/incorrect_tomato___spider_mites_two_spotted_spider_mite.png)
 
 *Figure 3: GradCAM and GradCAM++ visualization for a representative incorrect prediction, Tomato / Spider mites two-spotted spider mite. The attention is broader and less discriminative than in the correct case, consistent with model uncertainty and confusion among visually similar diseases.*
 
