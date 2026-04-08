@@ -2,7 +2,7 @@
   "config": {
     "data_dir": "Input/color",
     "image_size": 224,
-    "batch_size": 3,
+    "batch_size": 32,
     "num_workers": 4,
     "train_ratio": 0.8,
     "val_ratio": 0.1,

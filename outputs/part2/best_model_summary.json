@@ -63,6 +63,23 @@
     },
     {
       "dataset_version": "color",
+      "model_name": "resnet50",
+      "strategy": "from_scratch",
+      "pretrained": false,
+      "epochs": 15,
+      "epochs_recorded": 15,
+      "batch_size": 32,
+      "num_workers": 4,
+      "val_loss": 0.11202429148263914,
+      "val_top1_accuracy": 0.9808471454880294,
+      "val_macro_f1": 0.9730203747749329,
+      "test_loss": 0.11936906349415323,
+      "test_top1_accuracy": 0.9771681091355654,
+      "test_macro_f1": 0.9718425869941711,
+      "output_dir": "outputs\\part2\\color_resnet50_from_scratch"
+    },
+    {
+      "dataset_version": "color",
       "model_name": "efficientnet_b3",
       "strategy": "linear_probing",
       "pretrained": true,
@@ -77,29 +94,12 @@
       "test_top1_accuracy": 0.6740931688235667,
       "test_macro_f1": 0.5850310325622559,
       "output_dir": "outputs\\part2\\color_efficientnet_b3_linear_probing"
-    },
-    {
-      "dataset_version": "color",
-      "model_name": "resnet50",
-      "strategy": "from_scratch",
-      "pretrained": false,
-      "epochs": 15,
-      "epochs_recorded": 1,
-      "batch_size": 3,
-      "num_workers": 4,
-      "val_loss": 2.33508762300776,
-      "val_top1_accuracy": 0.48103131882393557,
-      "val_macro_f1": 0.356391578912735,
-      "test_loss": null,
-      "test_top1_accuracy": null,
-      "test_macro_f1": null,
-      "output_dir": "outputs\\part2\\color_resnet50_from_scratch"
     }
   ],
   "ablation_commands": {
-    "color": "python .\\train_part2.py --dataset-version color --model efficientnet_b3 --strategy full_finetune --epochs 15 --batch-size 32 --num-workers 4 --pretrained",
-    "grayscale": "python .\\train_part2.py --dataset-version grayscale --model efficientnet_b3 --strategy full_finetune --epochs 15 --batch-size 32 --num-workers 4 --pretrained",
-    "background-segmented": "python .\\train_part2.py --dataset-version background-segmented --model efficientnet_b3 --strategy full_finetune --epochs 15 --batch-size 32 --num-workers 4 --pretrained"
+    "color": "python -m src.plantvillage.part2.train_part2 --dataset-version color --model efficientnet_b3 --strategy full_finetune --epochs 15 --batch-size 32 --num-workers 4 --pretrained",
+    "grayscale": "python -m src.plantvillage.part2.train_part2 --dataset-version grayscale --model efficientnet_b3 --strategy full_finetune --epochs 15 --batch-size 32 --num-workers 4 --pretrained",
+    "background-segmented": "python -m src.plantvillage.part2.train_part2 --dataset-version background-segmented --model efficientnet_b3 --strategy full_finetune --epochs 15 --batch-size 32 --num-workers 4 --pretrained"
   },
   "artifacts": {
     "ranking_csv": "outputs\\part2\\best_model_ranking.csv",
